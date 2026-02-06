@@ -20,7 +20,16 @@ export function IdentityStep({
     merchant: string,
   ) => {
     if (!programType || !retailer || !merchant) return "";
-    return `${programType}-${retailer}-${merchant}SB`;
+    const pt = programType.toLowerCase();
+    const typeToken =
+      pt === "b2b"
+        ? "B2B"
+        : pt === "dropship"
+          ? "DS"
+          : programType.toUpperCase();
+    const normRetailer = retailer.trim().replace(/\s+/g, "");
+    const normMerchant = merchant.trim().replace(/\s+/g, "");
+    return `${typeToken}-${normRetailer}-${normMerchant}SB`;
   };
 
   /** -----------------------------
