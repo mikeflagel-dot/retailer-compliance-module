@@ -27,9 +27,7 @@ export function IdentityStep({
    * Handle Program Selection
    * ------------------------------ */
   const handleProgramSelect = (programId: string) => {
-    const selected = retailerPrograms.find(
-      (p) => p.id === programId,
-    );
+    const selected = retailerPrograms.find((p) => p.id === programId);
 
     if (!selected) return;
 
@@ -44,6 +42,7 @@ export function IdentityStep({
 
     updateFormData({
       retailerProgramId: programId,
+      retailerProgramName: selected.data.programName,
       retailer,
       programType,
       tradingPartnerId: newId,
@@ -69,8 +68,7 @@ export function IdentityStep({
   /** -----------------------------
    * Duplicate Check (Simulated)
    * ------------------------------ */
-  const isDuplicateId =
-    formData.tradingPartnerId === "ACME_WALMART_001";
+  const isDuplicateId = formData.tradingPartnerId === "ACME_WALMART_001";
 
   return (
     <div className="space-y-6">
@@ -79,23 +77,19 @@ export function IdentityStep({
           Trading Partner Information
         </h2>
         <p className="text-sm text-slate-600 mb-6">
-          Select a Retailer Program and define the merchant
-          relationship.
+          Select a Retailer Program and define the merchant relationship.
         </p>
 
         <div className="space-y-5">
           {/* Retailer Program */}
           <div>
             <label className="block text-sm text-slate-700 mb-2">
-              Retailer Program{" "}
-              <span className="text-red-500">*</span>
+              Retailer Program <span className="text-red-500">*</span>
             </label>
 
             <select
               value={formData.retailerProgramId || ""}
-              onChange={(e) =>
-                handleProgramSelect(e.target.value)
-              }
+              onChange={(e) => handleProgramSelect(e.target.value)}
               className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
             >
               <option value="">Select a program...</option>
@@ -115,16 +109,12 @@ export function IdentityStep({
 
             <select
               value={formData.merchant || ""}
-              onChange={(e) =>
-                handleMerchantChange(e.target.value)
-              }
+              onChange={(e) => handleMerchantChange(e.target.value)}
               className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
             >
               <option value="">Select a merchant...</option>
               <option value="Acme Corp">Acme Corp</option>
-              <option value="Globex Industries">
-                Globex Industries
-              </option>
+              <option value="Globex Industries">Globex Industries</option>
               <option value="Initech">Initech</option>
               <option value="Hooli">Hooli</option>
             </select>
@@ -133,8 +123,7 @@ export function IdentityStep({
           {/* Trading Partner ID */}
           <div>
             <label className="block text-sm text-slate-700 mb-2">
-              Trading Partner ID{" "}
-              <span className="text-red-500">*</span>
+              Trading Partner ID <span className="text-red-500">*</span>
             </label>
 
             <input
@@ -142,9 +131,7 @@ export function IdentityStep({
               value={formData.tradingPartnerId || ""}
               readOnly
               className={`w-full px-3 py-2 border rounded text-sm bg-slate-50 ${
-                isDuplicateId
-                  ? "border-amber-500"
-                  : "border-slate-300"
+                isDuplicateId ? "border-amber-500" : "border-slate-300"
               }`}
             />
 
@@ -180,8 +167,7 @@ export function IdentityStep({
           {/* Merchant ISA */}
           <div>
             <label className="block text-sm text-slate-700 mb-2">
-              Merchant ISA{" "}
-              <span className="text-red-500">*</span>
+              Merchant ISA <span className="text-red-500">*</span>
             </label>
 
             <input

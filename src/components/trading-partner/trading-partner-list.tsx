@@ -18,6 +18,8 @@ type TradingPartnerFormData = {
   tradingPartnerId: string;
   merchantGs1Prefix?: string;
   merchantIsa?: string;
+  retailerProgramId?: string;
+  retailerProgramName?: string;
 };
 
 function formatDate(iso: string) {
@@ -72,6 +74,7 @@ export function TradingPartnerList({
         d.tradingPartnerId,
         d.merchantGs1Prefix || "",
         d.merchantIsa || "",
+        d.retailerProgramName || "",
         p.id,
       ]
         .join(" ")
@@ -131,8 +134,7 @@ export function TradingPartnerList({
             <tr>
               <th className="text-left px-4 py-3">Merchant</th>
               <th className="text-left px-4 py-3">GS1 Prefix</th>
-              <th className="text-left px-4 py-3">Retailer</th>
-              <th className="text-left px-4 py-3">Program Type</th>
+              <th className="text-left px-4 py-3">Retailer Program</th>
               <th className="text-left px-4 py-3">Trading Partnership Id</th>
               <th className="text-left px-4 py-3">Updated</th>
               <th className="text-right px-4 py-3">Actions</th>
@@ -147,9 +149,12 @@ export function TradingPartnerList({
                 <tr key={p.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3">{d.merchant || "—"}</td>
                   <td className="px-4 py-3">{d.merchantGs1Prefix || "—"}</td>
-                  <td className="px-4 py-3">{d.retailer || "—"}</td>
                   <td className="px-4 py-3">
-                    {formatProgramType(d.programType)}
+                    {d.retailerProgramName
+                      ? d.retailerProgramName
+                      : d.retailer
+                        ? `${d.retailer}${d.programType ? ` (${formatProgramType(d.programType)})` : ""}`
+                        : "—"}
                   </td>
                   <td className="px-4 py-3">{d.tradingPartnerId || "—"}</td>
                   <td className="px-4 py-3">{formatDate(p.updatedAt)}</td>
