@@ -144,7 +144,6 @@ export function DocumentsLabelsStep({
           )}
         </div>
       </div>
-
       {/* ============================= */}
       {/* Shipping Label References */}
       {/* ============================= */}
@@ -181,7 +180,7 @@ export function DocumentsLabelsStep({
             </div>
 
             {formData.enableShippingLabelRef1 && (
-              <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-3">
                 <input
                   value={formData.shippingLabelRef1Prefix || ""}
                   onChange={(e) =>
@@ -189,9 +188,28 @@ export function DocumentsLabelsStep({
                       shippingLabelRef1Prefix: e.target.value,
                     })
                   }
-                  className="px-3 py-2 border border-slate-300 rounded text-sm"
+                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
                   placeholder="Prefix"
                 />
+
+                <select
+                  value={formData.shippingLabelRef1Value || ""}
+                  onChange={(e) =>
+                    updateFormData({
+                      shippingLabelRef1Value: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white"
+                >
+                  <option value="">Select…</option>
+                  <option value="purchaseOrderNumber">
+                    Purchase Order Number
+                  </option>
+                  <option value="customerTicketNumber">
+                    Customer Ticket Number
+                  </option>
+                </select>
+
                 {!formData.enableShippingLabelRef2 ? (
                   <button
                     type="button"
@@ -202,33 +220,15 @@ export function DocumentsLabelsStep({
                         shippingLabelRef1Value: "",
                       })
                     }
-                    className="text-xs text-slate-500 hover:underline mt-2"
+                    className="text-xs text-slate-500 hover:underline"
                   >
                     Remove Reference 1
                   </button>
                 ) : (
-                  <p className="text-xs text-slate-400 mt-2">
+                  <p className="text-xs text-slate-400">
                     Remove Reference 2 before removing Reference 1.
                   </p>
                 )}
-
-                <select
-                  value={formData.shippingLabelRef1Value || ""}
-                  onChange={(e) =>
-                    updateFormData({
-                      shippingLabelRef1Value: e.target.value,
-                    })
-                  }
-                  className="px-3 py-2 border border-slate-300 rounded text-sm bg-white"
-                >
-                  <option value="">Select…</option>
-                  <option value="purchaseOrderNumber">
-                    Purchase Order Number
-                  </option>
-                  <option value="customerTicketNumber">
-                    Customer Ticket Number
-                  </option>
-                </select>
               </div>
             )}
           </div>
@@ -253,7 +253,7 @@ export function DocumentsLabelsStep({
               </div>
 
               {formData.enableShippingLabelRef2 && (
-                <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-3">
                   <input
                     value={formData.shippingLabelRef2Prefix || ""}
                     onChange={(e) =>
@@ -261,22 +261,9 @@ export function DocumentsLabelsStep({
                         shippingLabelRef2Prefix: e.target.value,
                       })
                     }
-                    className="px-3 py-2 border border-slate-300 rounded text-sm"
+                    className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
                     placeholder="Prefix"
                   />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      updateFormData({
-                        enableShippingLabelRef2: false,
-                        shippingLabelRef2Prefix: "",
-                        shippingLabelRef2Value: "",
-                      })
-                    }
-                    className="text-xs text-slate-500 hover:underline mt-2"
-                  >
-                    Remove Reference 2
-                  </button>
 
                   <select
                     value={formData.shippingLabelRef2Value || ""}
@@ -285,7 +272,7 @@ export function DocumentsLabelsStep({
                         shippingLabelRef2Value: e.target.value,
                       })
                     }
-                    className="px-3 py-2 border border-slate-300 rounded text-sm bg-white"
+                    className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white"
                   >
                     <option value="">Select…</option>
                     <option value="purchaseOrderNumber">
@@ -295,13 +282,26 @@ export function DocumentsLabelsStep({
                       Customer Ticket Number
                     </option>
                   </select>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateFormData({
+                        enableShippingLabelRef2: false,
+                        shippingLabelRef2Prefix: "",
+                        shippingLabelRef2Value: "",
+                      })
+                    }
+                    className="text-xs text-slate-500 hover:underline"
+                  >
+                    Remove Reference 2
+                  </button>
                 </div>
               )}
             </div>
           )}
         </div>
       </div>
-
       {/* ============================= */}
       {/* Packing Slip Copy Requirements */}
       {/* ============================= */}
