@@ -192,25 +192,25 @@ export function DocumentsLabelsStep({
                   className="px-3 py-2 border border-slate-300 rounded text-sm"
                   placeholder="Prefix"
                 />
-{!formData.enableShippingLabelRef2 ? (
-  <button
-    type="button"
-    onClick={() =>
-      updateFormData({
-        enableShippingLabelRef1: false,
-        shippingLabelRef1Prefix: "",
-        shippingLabelRef1Value: "",
-      })
-    }
-    className="text-xs text-slate-500 hover:underline mt-2"
-  >
-    Remove Reference 1
-  </button>
-) : (
-  <p className="text-xs text-slate-400 mt-2">
-    Remove Reference 2 before removing Reference 1.
-  </p>
-)}
+                {!formData.enableShippingLabelRef2 ? (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateFormData({
+                        enableShippingLabelRef1: false,
+                        shippingLabelRef1Prefix: "",
+                        shippingLabelRef1Value: "",
+                      })
+                    }
+                    className="text-xs text-slate-500 hover:underline mt-2"
+                  >
+                    Remove Reference 1
+                  </button>
+                ) : (
+                  <p className="text-xs text-slate-400 mt-2">
+                    Remove Reference 2 before removing Reference 1.
+                  </p>
+                )}
 
                 <select
                   value={formData.shippingLabelRef1Value || ""}
@@ -264,19 +264,19 @@ export function DocumentsLabelsStep({
                     className="px-3 py-2 border border-slate-300 rounded text-sm"
                     placeholder="Prefix"
                   />
-<button
-  type="button"
-  onClick={() =>
-    updateFormData({
-      enableShippingLabelRef2: false,
-      shippingLabelRef2Prefix: "",
-      shippingLabelRef2Value: "",
-    })
-  }
-  className="text-xs text-slate-500 hover:underline mt-2"
->
-  Remove Reference 2
-</button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateFormData({
+                        enableShippingLabelRef2: false,
+                        shippingLabelRef2Prefix: "",
+                        shippingLabelRef2Value: "",
+                      })
+                    }
+                    className="text-xs text-slate-500 hover:underline mt-2"
+                  >
+                    Remove Reference 2
+                  </button>
 
                   <select
                     value={formData.shippingLabelRef2Value || ""}
