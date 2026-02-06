@@ -79,23 +79,19 @@ export default function App() {
   /** -----------------------------
    * Stored Configurations
    * ------------------------------ */
-  const [retailerPrograms, setRetailerPrograms] = useState<
-    Entity<any>[]
-  >([]);
-  const [tradingPartners, setTradingPartners] = useState<
-    Entity<any>[]
-  >([]);
+  const [retailerPrograms, setRetailerPrograms] = useState<Entity<any>[]>([]);
+  const [tradingPartners, setTradingPartners] = useState<Entity<any>[]>([]);
 
   /** -----------------------------
    * Editing IDs
    * ------------------------------ */
-  const [
-    editingRetailerProgramId,
-    setEditingRetailerProgramId,
-  ] = useState<string | null>(null);
+  const [editingRetailerProgramId, setEditingRetailerProgramId] = useState<
+    string | null
+  >(null);
 
-  const [editingTradingPartnerId, setEditingTradingPartnerId] =
-    useState<string | null>(null);
+  const [editingTradingPartnerId, setEditingTradingPartnerId] = useState<
+    string | null
+  >(null);
 
   /** -----------------------------
    * Wizard Step State
@@ -105,43 +101,32 @@ export default function App() {
   /** -----------------------------
    * Trading Partner Form Data
    * ------------------------------ */
-  const [formData, setFormData] = useState(
-    defaultTradingPartnerData,
-  );
+  const [formData, setFormData] = useState(defaultTradingPartnerData);
 
   const updateFormData = (data: Partial<typeof formData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
+  // Styled confirm modal for saving Trading Partner edits
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
+
   /** -----------------------------
    * LocalStorage Persistence
    * ------------------------------ */
   useEffect(() => {
-    const storedPrograms = localStorage.getItem(
-      "retailerPrograms",
-    );
-    const storedPartners = localStorage.getItem(
-      "tradingPartners",
-    );
+    const storedPrograms = localStorage.getItem("retailerPrograms");
+    const storedPartners = localStorage.getItem("tradingPartners");
 
-    if (storedPrograms)
-      setRetailerPrograms(JSON.parse(storedPrograms));
-    if (storedPartners)
-      setTradingPartners(JSON.parse(storedPartners));
+    if (storedPrograms) setRetailerPrograms(JSON.parse(storedPrograms));
+    if (storedPartners) setTradingPartners(JSON.parse(storedPartners));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(
-      "retailerPrograms",
-      JSON.stringify(retailerPrograms),
-    );
+    localStorage.setItem("retailerPrograms", JSON.stringify(retailerPrograms));
   }, [retailerPrograms]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "tradingPartners",
-      JSON.stringify(tradingPartners),
-    );
+    localStorage.setItem("tradingPartners", JSON.stringify(tradingPartners));
   }, [tradingPartners]);
 
   /** -----------------------------
@@ -160,13 +145,8 @@ export default function App() {
     }
 
     if (currentStep === 1) {
-      if (
-        !formData.fulfillmentMode ||
-        !formData.shippingPaymentTerms
-      ) {
-        alert(
-          "Please complete all required Shipping Defaults fields.",
-        );
+      if (!formData.fulfillmentMode || !formData.shippingPaymentTerms) {
+        alert("Please complete all required Shipping Defaults fields.");
         return;
       }
     }
@@ -250,15 +230,11 @@ export default function App() {
    * Delete Handlers
    * ------------------------------ */
   const deleteRetailerProgram = (id: string) => {
-    setRetailerPrograms((prev) =>
-      prev.filter((p) => p.id !== id),
-    );
+    setRetailerPrograms((prev) => prev.filter((p) => p.id !== id));
   };
 
   const deleteTradingPartner = (id: string) => {
-    setTradingPartners((prev) =>
-      prev.filter((t) => t.id !== id),
-    );
+    setTradingPartners((prev) => prev.filter((t) => t.id !== id));
   };
 
   /** -----------------------------
@@ -307,9 +283,7 @@ export default function App() {
           {menuTab === "retailer-programs" && (
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h2 className="text-lg text-slate-900">
-                  Retailer Programs
-                </h2>
+                <h2 className="text-lg text-slate-900">Retailer Programs</h2>
 
                 <button
                   onClick={() => {
@@ -337,9 +311,7 @@ export default function App() {
           {menuTab === "trading-partners" && (
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h2 className="text-lg text-slate-900">
-                  Trading Partners
-                </h2>
+                <h2 className="text-lg text-slate-900">Trading Partners</h2>
 
                 <button
                   onClick={() => {
@@ -360,9 +332,7 @@ export default function App() {
               <TradingPartnerList
                 partners={tradingPartners}
                 onSelect={(id) => {
-                  const tp = tradingPartners.find(
-                    (t) => t.id === id,
-                  );
+                  const tp = tradingPartners.find((t) => t.id === id);
                   if (!tp) return;
 
                   setEditingTradingPartnerId(id);
@@ -389,9 +359,7 @@ export default function App() {
 
     return (
       <RetailerProgramWizard
-        initialData={
-          programToEdit ? programToEdit.data : undefined
-        }
+        initialData={programToEdit ? programToEdit.data : undefined}
         onComplete={handleRetailerProgramComplete}
         onBack={() => {
           setEditingRetailerProgramId(null);
@@ -440,8 +408,8 @@ export default function App() {
           </h1>
 
           <p className="text-sm text-slate-600">
-            Configure merchant-retailer shipping defaults,
-            billing, and overrides.
+            Configure merchant-retailer shipping defaults, billing, and
+            overrides.
           </p>
         </div>
 
@@ -450,11 +418,7 @@ export default function App() {
           <WizardStepper
             steps={STEPS}
             currentStep={currentStep}
-            onStepClick={
-              editingTradingPartnerId
-                ? setCurrentStep
-                : undefined
-            }
+            onStepClick={editingTradingPartnerId ? setCurrentStep : undefined}
           />
         </div>
 
@@ -476,10 +440,7 @@ export default function App() {
           )}
 
           {currentStep === 2 && (
-            <BillingStep
-              formData={formData}
-              updateFormData={updateFormData}
-            />
+            <BillingStep formData={formData} updateFormData={updateFormData} />
           )}
 
           {currentStep === 3 && (
@@ -507,15 +468,7 @@ export default function App() {
             {/* ✅ Edit Mode Save Anytime */}
             {editingTradingPartnerId && (
               <button
-                onClick={() => {
-                  const confirmed = window.confirm(
-                    "Saving changes will update shipping and compliance rules for all current open orders (not yet picked) and all future orders under this Trading Partner.\n\nStill want to continue?",
-                  );
-
-                  if (!confirmed) return;
-
-                  handleActivate();
-                }}
+                onClick={() => setShowSaveConfirm(true)}
                 className="px-4 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700"
               >
                 Save Changes…
@@ -533,6 +486,40 @@ export default function App() {
           </div>
         </div>
       </div>
+      {showSaveConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+            <h3 className="text-lg font-medium text-slate-900 mb-2">
+              Save Trading Partner Changes?
+            </h3>
+
+            <p className="text-sm text-slate-600 mb-6">
+              Saving changes will update shipping and compliance rules for all
+              current open orders (not yet picked) and all future orders under
+              this Trading Partner.
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowSaveConfirm(false)}
+                className="px-4 py-2 text-sm border rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowSaveConfirm(false);
+                  handleActivate();
+                }}
+                className="px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
