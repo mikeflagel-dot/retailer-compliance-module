@@ -129,11 +129,11 @@ export function TradingPartnerList({
         <table className="w-full text-sm">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
+              <th className="text-left px-4 py-3">Merchant</th>
+              <th className="text-left px-4 py-3">GS1 Prefix</th>
               <th className="text-left px-4 py-3">Retailer</th>
               <th className="text-left px-4 py-3">Program Type</th>
-              <th className="text-left px-4 py-3">Merchant</th>
-              <th className="text-left px-4 py-3">Trading Partner Id</th>
-              <th className="text-left px-4 py-3">GS1 Prefix</th>
+              <th className="text-left px-4 py-3">Trading Partnership Id</th>
               <th className="text-left px-4 py-3">Updated</th>
               <th className="text-right px-4 py-3">Actions</th>
             </tr>
@@ -145,13 +145,13 @@ export function TradingPartnerList({
 
               return (
                 <tr key={p.id} className="hover:bg-slate-50">
+                  <td className="px-4 py-3">{d.merchant || "—"}</td>
+                  <td className="px-4 py-3">{d.merchantGs1Prefix || "—"}</td>
                   <td className="px-4 py-3">{d.retailer || "—"}</td>
                   <td className="px-4 py-3">
                     {formatProgramType(d.programType)}
                   </td>
-                  <td className="px-4 py-3">{d.merchant || "—"}</td>
                   <td className="px-4 py-3">{d.tradingPartnerId || "—"}</td>
-                  <td className="px-4 py-3">{d.merchantGs1Prefix || "—"}</td>
                   <td className="px-4 py-3">{formatDate(p.updatedAt)}</td>
 
                   <td className="px-4 py-3 text-right">
