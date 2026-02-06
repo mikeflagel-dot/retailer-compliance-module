@@ -36,9 +36,9 @@ export function DocumentsLabelsStep({
 
   return (
     <div className="space-y-6">
-      {/* ----------------------------- */}
+      {/* ============================= */}
       {/* Document Templates */}
-      {/* ----------------------------- */}
+      {/* ============================= */}
       <div className="bg-white border border-slate-200 rounded-lg p-6">
         <h2 className="text-lg text-slate-900 mb-1">Document Templates</h2>
         <p className="text-sm text-slate-600 mb-6">
@@ -145,9 +145,134 @@ export function DocumentsLabelsStep({
         </div>
       </div>
 
-      {/* ----------------------------- */}
+      {/* ============================= */}
+      {/* Shipping Label References */}
+      {/* ============================= */}
+      <div className="bg-white border border-slate-200 rounded-lg p-6">
+        <h2 className="text-lg text-slate-900 mb-1">
+          Shipping Label References
+        </h2>
+        <p className="text-sm text-slate-600 mb-2">
+          Optionally configure reference fields that appear on shipping labels.
+        </p>
+
+        <div className="bg-amber-50 border border-amber-200 rounded-md px-4 py-3 text-xs text-amber-800 mb-5">
+          ⚠️ Carrier reference fields may have strict character limits (often
+          ~30 characters). Keep prefixes short.
+        </div>
+
+        <div className="space-y-6">
+          {/* Reference 1 */}
+          <div>
+            <div className="flex justify-between mb-2">
+              <label className="text-sm text-slate-700">
+                Shipping Label Reference 1
+              </label>
+              {!formData.enableShippingLabelRef1 && (
+                <button
+                  onClick={() =>
+                    updateFormData({ enableShippingLabelRef1: true })
+                  }
+                  className="text-xs text-blue-600 hover:underline"
+                >
+                  + Add Reference 1
+                </button>
+              )}
+            </div>
+
+            {formData.enableShippingLabelRef1 && (
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  value={formData.shippingLabelRef1Prefix || ""}
+                  onChange={(e) =>
+                    updateFormData({
+                      shippingLabelRef1Prefix: e.target.value,
+                    })
+                  }
+                  className="px-3 py-2 border border-slate-300 rounded text-sm"
+                  placeholder="Prefix"
+                />
+
+                <select
+                  value={formData.shippingLabelRef1Value || ""}
+                  onChange={(e) =>
+                    updateFormData({
+                      shippingLabelRef1Value: e.target.value,
+                    })
+                  }
+                  className="px-3 py-2 border border-slate-300 rounded text-sm bg-white"
+                >
+                  <option value="">Select…</option>
+                  <option value="purchaseOrderNumber">
+                    Purchase Order Number
+                  </option>
+                  <option value="customerTicketNumber">
+                    Customer Ticket Number
+                  </option>
+                </select>
+              </div>
+            )}
+          </div>
+
+          {/* Reference 2 */}
+          {formData.enableShippingLabelRef1 && (
+            <div>
+              <div className="flex justify-between mb-2">
+                <label className="text-sm text-slate-700">
+                  Shipping Label Reference 2
+                </label>
+                {!formData.enableShippingLabelRef2 && (
+                  <button
+                    onClick={() =>
+                      updateFormData({ enableShippingLabelRef2: true })
+                    }
+                    className="text-xs text-blue-600 hover:underline"
+                  >
+                    + Add Reference 2
+                  </button>
+                )}
+              </div>
+
+              {formData.enableShippingLabelRef2 && (
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    value={formData.shippingLabelRef2Prefix || ""}
+                    onChange={(e) =>
+                      updateFormData({
+                        shippingLabelRef2Prefix: e.target.value,
+                      })
+                    }
+                    className="px-3 py-2 border border-slate-300 rounded text-sm"
+                    placeholder="Prefix"
+                  />
+
+                  <select
+                    value={formData.shippingLabelRef2Value || ""}
+                    onChange={(e) =>
+                      updateFormData({
+                        shippingLabelRef2Value: e.target.value,
+                      })
+                    }
+                    className="px-3 py-2 border border-slate-300 rounded text-sm bg-white"
+                  >
+                    <option value="">Select…</option>
+                    <option value="purchaseOrderNumber">
+                      Purchase Order Number
+                    </option>
+                    <option value="customerTicketNumber">
+                      Customer Ticket Number
+                    </option>
+                  </select>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ============================= */}
       {/* Packing Slip Copy Requirements */}
-      {/* ----------------------------- */}
+      {/* ============================= */}
       <div className="bg-white border border-slate-200 rounded-lg p-6">
         <h2 className="text-lg text-slate-900 mb-1">
           Packing Slip Copy Requirements
@@ -178,7 +303,7 @@ export function DocumentsLabelsStep({
                   }}
                   className="px-3 py-2 border border-slate-300 rounded text-sm bg-white"
                 >
-                  <option value="">Select level...</option>
+                  <option value="">Select level…</option>
                   {allowedLevels.map((lvl) => (
                     <option
                       key={lvl}
@@ -209,7 +334,6 @@ export function DocumentsLabelsStep({
                 />
 
                 <button
-                  type="button"
                   onClick={() => {
                     const next = [...packingSlipConfigs];
                     next.splice(index, 1);
@@ -224,7 +348,6 @@ export function DocumentsLabelsStep({
           })}
 
           <button
-            type="button"
             onClick={() =>
               setPackingSlipConfigs([
                 ...packingSlipConfigs,
