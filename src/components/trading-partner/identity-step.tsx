@@ -137,7 +137,9 @@ export function IdentityStep({
             <input
               type="text"
               value={formData.tradingPartnerId || ""}
-              readOnly
+              onChange={(e) =>
+                updateFormData({ tradingPartnerId: e.target.value })
+              }
               className={`w-full px-3 py-2 border rounded text-sm bg-slate-50 ${
                 isDuplicateId ? "border-amber-500" : "border-slate-300"
               }`}
