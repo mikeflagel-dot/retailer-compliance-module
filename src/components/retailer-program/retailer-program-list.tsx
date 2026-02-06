@@ -189,7 +189,10 @@ export function RetailerProgramList({
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="text-left px-4 py-3 text-xs text-slate-700">
-                  Retailer / Program
+                  Retailer Name
+                </th>
+                <th className="text-left px-4 py-3 text-xs text-slate-700">
+                  Retailer Program
                 </th>
                 <th className="text-left px-4 py-3 text-xs text-slate-700">
                   Program Code
@@ -231,6 +234,7 @@ export function RetailerProgramList({
                     </td>
                     <td className="px-4 py-3 text-slate-600"></td>
                     <td className="px-4 py-3 text-slate-600"></td>
+                    <td className="px-4 py-3 text-slate-600"></td>
                     <td className="px-4 py-3 text-right">
                       {group.programs.length === 1 && (
                         <div
@@ -270,10 +274,9 @@ export function RetailerProgramList({
 
                       return (
                         <tr key={p.id} className="hover:bg-slate-50">
-                          <td className="px-4 py-3">
-                            <div className="pl-6 text-slate-900">
-                              {d.programName || "—"}
-                            </div>
+                          <td className="px-4 py-3"></td>
+                          <td className="px-4 py-3 text-slate-900">
+                            {d.programName || "—"}
                           </td>
 
                           <td className="px-4 py-3 text-slate-600">
