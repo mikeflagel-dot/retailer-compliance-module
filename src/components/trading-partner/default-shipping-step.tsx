@@ -25,11 +25,6 @@ export function DefaultShippingStep({
    * - Parcel mode
    * - Third Party OR Bill to Sender
    */
-  const requiresBillingSetup =
-    formData.fulfillmentMode === "Parcel" &&
-    ["Third Party", "Bill to Sender", "Collect"].includes(
-      formData.shippingPaymentTerms,
-    );
 
   /** Reset invalid payment terms if switching to Freight */
   const handleFulfillmentModeChange = (mode: string) => {

@@ -402,7 +402,7 @@ export default function App() {
 
     return (
       <RetailerProgramWizard
-        initialData={mergedInitialData}
+        initialData={formData}
         onComplete={handleRetailerProgramComplete}
         onBack={() => {
           setEditingRetailerProgramId(null);
