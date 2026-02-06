@@ -42,9 +42,6 @@ type Entity<T> = {
  * Ensures new fields are always present,
  * even for older saved programs.
  * ------------------------------ */
-const defaultRetailerProgramData = {
-  enableShippingLabelRef2: false,
-};
 
 /** -----------------------------
  * ✅ Trading Partner Defaults
