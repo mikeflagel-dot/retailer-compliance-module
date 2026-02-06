@@ -1,10 +1,5 @@
 import { useMemo, useState } from "react";
-import {
-  Trash2,
-  ChevronDown,
-  ChevronRight,
-  Pencil,
-} from "lucide-react";
+import { Trash2, ChevronDown, ChevronRight, Pencil } from "lucide-react";
 
 type Status = "draft" | "active";
 
@@ -45,18 +40,14 @@ export function RetailerProgramList({
   onDelete: (id: string) => void;
 }) {
   const [search, setSearch] = useState("");
-  const [retailerFilter, setRetailerFilter] =
-    useState<string>("all");
+  const [retailerFilter, setRetailerFilter] = useState<string>("all");
 
   const [pageSize, setPageSize] = useState(25);
   const [page, setPage] = useState(1);
 
-  const [expanded, setExpanded] = useState<Set<string>>(
-    () => new Set(),
-  );
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
 
-  const [pendingDeleteId, setPendingDeleteId] =
-    useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   /** Retailer dropdown options */
   const retailerOptions = useMemo(() => {
@@ -65,9 +56,7 @@ export function RetailerProgramList({
       const r = (p.data?.retailerName || "").trim();
       if (r) s.add(r);
     }
-    return Array.from(s).sort((a, b) =>
-      a.localeCompare(b),
-    );
+    return Array.from(s).sort((a, b) => a.localeCompare(b));
   }, [programs]);
 
   /** Filtering + search */
@@ -78,8 +67,7 @@ export function RetailerProgramList({
       .filter((p) =>
         retailerFilter === "all"
           ? true
-          : (p.data?.retailerName || "") ===
-            retailerFilter,
+          : (p.data?.retailerName || "") === retailerFilter,
       )
       .filter((p) => {
         if (!q) return true;
@@ -101,15 +89,10 @@ export function RetailerProgramList({
 
   /** Group by retailer */
   const groupedRetailers = useMemo<RetailerGroup[]>(() => {
-    const map = new Map<
-      string,
-      Entity<RetailerProgramData>[]
-    >();
+    const map = new Map<string, Entity<RetailerProgramData>[]>();
 
     for (const p of filteredPrograms) {
-      const retailer =
-        (p.data?.retailerName || "—").trim() ||
-        "—";
+      const retailer = (p.data?.retailerName || "—").trim() || "—";
       const arr = map.get(retailer) ?? [];
       arr.push(p);
       map.set(retailer, arr);
@@ -120,20 +103,14 @@ export function RetailerProgramList({
         retailerName,
         programs: programs.sort(
           (a, b) =>
-            new Date(b.updatedAt).getTime() -
-            new Date(a.updatedAt).getTime(),
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
         ),
       }))
-      .sort((a, b) =>
-        a.retailerName.localeCompare(b.retailerName),
-      );
+      .sort((a, b) => a.retailerName.localeCompare(b.retailerName));
   }, [filteredPrograms]);
 
   /** Pagination */
-  const totalPages = Math.max(
-    1,
-    Math.ceil(groupedRetailers.length / pageSize),
-  );
+  const totalPages = Math.max(1, Math.ceil(groupedRetailers.length / pageSize));
   const safePage = Math.min(page, totalPages);
 
   const pageGroups = useMemo(() => {
@@ -204,9 +181,7 @@ export function RetailerProgramList({
       {/* Table */}
       {groupedRetailers.length === 0 ? (
         <div className="border border-dashed border-slate-300 rounded-lg p-8 text-center">
-          <p className="text-sm text-slate-500">
-            No Retailer Programs found
-          </p>
+          <p className="text-sm text-slate-500">No Retailer Programs found</p>
         </div>
       ) : (
         <div className="border border-slate-200 rounded overflow-hidden">
@@ -239,14 +214,9 @@ export function RetailerProgramList({
                   {/* Retailer row */}
                   <tr
                     className="bg-slate-50 cursor-pointer"
-                    onClick={() =>
-                      toggleRetailer(group.retailerName)
-                    }
+                    onClick={() => toggleRetailer(group.retailerName)}
                   >
-                    <td
-                      colSpan={4}
-                      className="px-4 py-3 font-medium text-slate-900"
-                    >
+                    <td className="px-4 py-3 font-medium text-slate-900">
                       <div className="flex items-center gap-2">
                         {isOpen ? (
                           <ChevronDown className="w-4 h-4" />
@@ -259,20 +229,47 @@ export function RetailerProgramList({
                         </span>
                       </div>
                     </td>
+                    <td className="px-4 py-3 text-slate-600"></td>
+                    <td className="px-4 py-3 text-slate-600"></td>
+                    <td className="px-4 py-3 text-right">
+                      {group.programs.length === 1 && (
+                        <div
+                          className="inline-flex items-center gap-3"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSelect(group.programs[0].id);
+                            }}
+                            title="Edit"
+                            className="text-slate-600 hover:text-slate-800"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPendingDeleteId(group.programs[0].id);
+                            }}
+                            title="Delete"
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
+                    </td>
                   </tr>
 
                   {/* Program rows */}
                   {isOpen &&
                     group.programs.map((p) => {
-                      const d =
-                        p.data ||
-                        ({} as RetailerProgramData);
+                      const d = p.data || ({} as RetailerProgramData);
 
                       return (
-                        <tr
-                          key={p.id}
-                          className="hover:bg-slate-50"
-                        >
+                        <tr key={p.id} className="hover:bg-slate-50">
                           <td className="px-4 py-3">
                             <div className="pl-6 text-slate-900">
                               {d.programName || "—"}
@@ -298,9 +295,7 @@ export function RetailerProgramList({
                               </button>
 
                               <button
-                                onClick={() =>
-                                  setPendingDeleteId(p.id)
-                                }
+                                onClick={() => setPendingDeleteId(p.id)}
                                 title="Delete"
                                 className="text-red-600 hover:text-red-700"
                               >
@@ -327,8 +322,8 @@ export function RetailerProgramList({
             </h3>
 
             <p className="text-sm text-slate-600 mb-6">
-              This action cannot be undone and may impact
-              existing or future orders.
+              This action cannot be undone and may impact existing or future
+              orders.
             </p>
 
             <div className="flex justify-end gap-3">
