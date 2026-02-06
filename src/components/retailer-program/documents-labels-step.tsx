@@ -181,34 +181,36 @@ export function DocumentsLabelsStep({
 
             {formData.enableShippingLabelRef1 && (
               <div className="space-y-3">
-                <input
-                  value={formData.shippingLabelRef1Prefix || ""}
-                  onChange={(e) =>
-                    updateFormData({
-                      shippingLabelRef1Prefix: e.target.value,
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
-                  placeholder="Prefix"
-                />
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    value={formData.shippingLabelRef1Prefix || ""}
+                    onChange={(e) =>
+                      updateFormData({
+                        shippingLabelRef1Prefix: e.target.value,
+                      })
+                    }
+                    className="px-3 py-2 border border-slate-300 rounded text-sm"
+                    placeholder="Prefix"
+                  />
 
-                <select
-                  value={formData.shippingLabelRef1Value || ""}
-                  onChange={(e) =>
-                    updateFormData({
-                      shippingLabelRef1Value: e.target.value,
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white"
-                >
-                  <option value="">Select…</option>
-                  <option value="purchaseOrderNumber">
-                    Purchase Order Number
-                  </option>
-                  <option value="customerTicketNumber">
-                    Customer Ticket Number
-                  </option>
-                </select>
+                  <select
+                    value={formData.shippingLabelRef1Value || ""}
+                    onChange={(e) =>
+                      updateFormData({
+                        shippingLabelRef1Value: e.target.value,
+                      })
+                    }
+                    className="px-3 py-2 border border-slate-300 rounded text-sm bg-white"
+                  >
+                    <option value="">Select…</option>
+                    <option value="purchaseOrderNumber">
+                      Purchase Order Number
+                    </option>
+                    <option value="customerTicketNumber">
+                      Customer Ticket Number
+                    </option>
+                  </select>
+                </div>
 
                 {!formData.enableShippingLabelRef2 ? (
                   <button
@@ -254,34 +256,36 @@ export function DocumentsLabelsStep({
 
               {formData.enableShippingLabelRef2 && (
                 <div className="space-y-3">
-                  <input
-                    value={formData.shippingLabelRef2Prefix || ""}
-                    onChange={(e) =>
-                      updateFormData({
-                        shippingLabelRef2Prefix: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
-                    placeholder="Prefix"
-                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      value={formData.shippingLabelRef2Prefix || ""}
+                      onChange={(e) =>
+                        updateFormData({
+                          shippingLabelRef2Prefix: e.target.value,
+                        })
+                      }
+                      className="px-3 py-2 border border-slate-300 rounded text-sm"
+                      placeholder="Prefix"
+                    />
 
-                  <select
-                    value={formData.shippingLabelRef2Value || ""}
-                    onChange={(e) =>
-                      updateFormData({
-                        shippingLabelRef2Value: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white"
-                  >
-                    <option value="">Select…</option>
-                    <option value="purchaseOrderNumber">
-                      Purchase Order Number
-                    </option>
-                    <option value="customerTicketNumber">
-                      Customer Ticket Number
-                    </option>
-                  </select>
+                    <select
+                      value={formData.shippingLabelRef2Value || ""}
+                      onChange={(e) =>
+                        updateFormData({
+                          shippingLabelRef2Value: e.target.value,
+                        })
+                      }
+                      className="px-3 py-2 border border-slate-300 rounded text-sm bg-white"
+                    >
+                      <option value="">Select…</option>
+                      <option value="purchaseOrderNumber">
+                        Purchase Order Number
+                      </option>
+                      <option value="customerTicketNumber">
+                        Customer Ticket Number
+                      </option>
+                    </select>
+                  </div>
 
                   <button
                     type="button"
