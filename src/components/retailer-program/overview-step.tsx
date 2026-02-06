@@ -90,7 +90,7 @@ export function OverviewStep({
             })
           }
           className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
-          placeholder="e.g., Target Vendor Compliance"
+          placeholder="e.g., Target B2B"
         />
       </div>
 
@@ -108,7 +108,7 @@ export function OverviewStep({
             })
           }
           className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
-          placeholder="e.g., TGT-2025"
+          placeholder="e.g., TGTB2B"
         />
       </div>
     </div>
