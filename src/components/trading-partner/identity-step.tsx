@@ -21,12 +21,11 @@ export function IdentityStep({
   ) => {
     if (!programType || !retailer || !merchant) return "";
     const pt = programType.toLowerCase();
-    const typeToken =
-      pt === "b2b"
+    const typeToken = pt.includes("drop")
+      ? "DS"
+      : pt.includes("b2b")
         ? "B2B"
-        : pt === "dropship"
-          ? "DS"
-          : programType.toUpperCase();
+        : programType.toUpperCase();
     const normRetailer = retailer.trim().replace(/\s+/g, "");
     const normMerchant = merchant.trim().replace(/\s+/g, "");
     return `${typeToken}-${normRetailer}-${normMerchant}SB`;
