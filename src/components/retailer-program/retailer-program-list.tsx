@@ -139,7 +139,7 @@ export function RetailerProgramList({
               setSearch(e.target.value);
               setPage(1);
             }}
-            placeholder="Search retailer or program name…"
+            placeholder="Search retailer, program name, program code…"
             className="w-96 max-w-full px-3 py-2 border border-slate-300 rounded text-sm"
           />
 

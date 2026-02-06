@@ -232,8 +232,8 @@ export function PackingShippingStep({
               <input
                 type="checkbox"
                 checked={
-                  packingShipping.cartonLabelApplication?.avoidSeamsAndCorners ||
-                  false
+                  packingShipping.cartonLabelApplication
+                    ?.avoidSeamsAndCorners || false
                 }
                 onChange={(e) =>
                   updatePackingShipping({
@@ -258,8 +258,8 @@ export function PackingShippingStep({
               <input
                 type="number"
                 value={
-                  packingShipping.cartonLabelApplication?.minEdgeDistanceInches ||
-                  ""
+                  packingShipping.cartonLabelApplication
+                    ?.minEdgeDistanceInches || ""
                 }
                 onChange={(e) =>
                   updatePackingShipping({
@@ -345,87 +345,69 @@ export function PackingShippingStep({
               Load ID Required in ASN
             </label>
           </div>
-
-          {/* Packing Slip Placement */}
-          <div>
-            <label className="block text-sm text-slate-700 mb-2">
-              Packing Slip Placement
-            </label>
-            <select
-              value={packingShipping.packingSlipPlacement || ""}
-              onChange={(e) =>
-                updatePackingShipping({
-                  packingSlipPlacement: e.target.value,
-                })
-              }
-              className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white"
-            >
-              <option value="">Select...</option>
-              <option value="lead-carton">Lead Carton Only</option>
-              <option value="every-carton">Every Carton</option>
-              <option value="pouch-required">Removable Pouch Attached</option>
-            </select>
-          </div>
         </div>
       </div>
       {/* ----------------------------- */}
-{/* Packing Slip & Documentation Rules */}
-{/* ----------------------------- */}
-<div className="bg-white border border-slate-200 rounded-lg p-6">
-  <h2 className="text-lg text-slate-900 mb-1">
-    Packing Slip & Documentation Rules
-  </h2>
-  <p className="text-sm text-slate-600 mb-6">
-    Define where packing lists must be applied during packing and shipment.
-  </p>
+      {/* Packing Slip & Documentation Rules */}
+      {/* ----------------------------- */}
+      <div className="bg-white border border-slate-200 rounded-lg p-6">
+        <h2 className="text-lg text-slate-900 mb-1">
+          Packing Slip & Documentation Rules
+        </h2>
+        <p className="text-sm text-slate-600 mb-6">
+          Define where packing lists must be applied during packing and
+          shipment.
+        </p>
 
-  <div className="space-y-5">
-    {/* Packing Slip Required */}
-    <div className="flex items-center gap-2">
-      <input
-        type="checkbox"
-        checked={packingShipping.packingSlipRequired || false}
-        onChange={(e) =>
-          updatePackingShipping({
-            packingSlipRequired: e.target.checked,
-          })
-        }
-        className={checkboxClass}
-      />
-      <label className="text-sm text-slate-700">
-        Packing Slip Required
-      </label>
-    </div>
+        <div className="space-y-5">
+          {/* Packing Slip Required */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={packingShipping.packingSlipRequired || false}
+              onChange={(e) =>
+                updatePackingShipping({
+                  packingSlipRequired: e.target.checked,
+                })
+              }
+              className={checkboxClass}
+            />
+            <label className="text-sm text-slate-700">
+              Packing Slip Required
+            </label>
+          </div>
 
-    {/* Placement */}
-    <div>
-      <label className="block text-sm text-slate-700 mb-2">
-        Packing Slip Placement
-      </label>
+          {/* Placement (shown only when required) */}
+          {packingShipping.packingSlipRequired && (
+            <div>
+              <label className="block text-sm text-slate-700 mb-2">
+                Packing Slip Placement
+              </label>
 
-      <select
-        value={packingShipping.packingSlipPlacement || ""}
-        onChange={(e) =>
-          updatePackingShipping({
-            packingSlipPlacement: e.target.value,
-          })
-        }
-        className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white"
-      >
-        <option value="">Select...</option>
-        <option value="lead-carton-pouch">
-          Removable pouch attached to lead carton only
-        </option>
-        <option value="each-carton-pouch">
-          Removable pouch attached to each carton
-        </option>
-        <option value="inside-carton">
-          Packing slip placed inside carton
-        </option>
-      </select>
-    </div>
-  </div>
-</div>
+              <select
+                value={packingShipping.packingSlipPlacement || ""}
+                onChange={(e) =>
+                  updatePackingShipping({
+                    packingSlipPlacement: e.target.value,
+                  })
+                }
+                className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white"
+              >
+                <option value="">Select...</option>
+                <option value="lead-carton-pouch">
+                  Removable pouch attached to lead carton only
+                </option>
+                <option value="each-carton-pouch">
+                  Removable pouch attached to each carton
+                </option>
+                <option value="inside-carton">
+                  Packing slip placed inside carton
+                </option>
+              </select>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* ----------------------------- */}
       {/* Pallet Requirements (B2B ONLY) */}
@@ -434,8 +416,8 @@ export function PackingShippingStep({
         <div className="bg-white border border-slate-200 rounded-lg p-6">
           <h2 className="text-lg text-slate-900 mb-1">Pallet Requirements</h2>
           <p className="text-sm text-slate-600 mb-6">
-            Freight pallet constraints such as max height, max weight, PO mixing,
-            SKU mixing, and label requirements (B2B only).
+            Freight pallet constraints such as max height, max weight, PO
+            mixing, SKU mixing, and label requirements (B2B only).
           </p>
 
           <div className="space-y-5">
@@ -492,7 +474,9 @@ export function PackingShippingStep({
                 <option value="">Select...</option>
                 <option value="no">No — Do not mix POs</option>
                 <option value="yes">Yes — PO mixing allowed</option>
-                <option value="conditional">Allowed only with slip sheets</option>
+                <option value="conditional">
+                  Allowed only with slip sheets
+                </option>
               </select>
             </div>
 
