@@ -141,7 +141,7 @@ export function TradingPartnerList({
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-200/50">
             {pageRows.map((p) => {
               const d = p.data || {};
 
