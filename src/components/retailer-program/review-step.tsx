@@ -4,8 +4,7 @@ interface ReviewStepProps {
 
 export function ReviewStep({ formData }: ReviewStepProps) {
   const packingShipping = formData.packingShipping || {};
-  const cartonLabel =
-    packingShipping.cartonLabelApplication || {};
+  const cartonLabel = packingShipping.cartonLabelApplication || {};
 
   /** Routing Rules */
   const carrierMappings = formData.carrierServiceMappings || [];
@@ -13,22 +12,13 @@ export function ReviewStep({ formData }: ReviewStepProps) {
   /** -----------------------------
    * Helper: Render only populated rows
    * ------------------------------ */
-  const Row = ({
-    label,
-    value,
-  }: {
-    label: string;
-    value: any;
-  }) => {
-    if (value === null || value === undefined || value === "")
-      return null;
+  const Row = ({ label, value }: { label: string; value: any }) => {
+    if (value === null || value === undefined || value === "") return null;
 
     return (
       <div>
         <p className="text-slate-500 text-sm">{label}</p>
-        <p className="text-slate-900 font-medium text-sm">
-          {value}
-        </p>
+        <p className="text-slate-900 font-medium text-sm">{value}</p>
       </div>
     );
   };
@@ -46,18 +36,46 @@ export function ReviewStep({ formData }: ReviewStepProps) {
    * Operator Preview (Mock)
    * ------------------------------ */
   const operatorPreviewEn = [
-    packingShipping.gs1LabelRequired
-      ? "GS1 carton label required."
+    packingShipping.gs1LabelRequired ? "GS1 carton label required." : null,
+    cartonLabel.side
+      ? `Label side: ${
+          (
+            {
+              "long-side": "Longest Side (Primary Panel)",
+              "short-side": "Shortest Side (End Panel)",
+              top: "Top Surface",
+              "largest-flat": "Largest Flat Side",
+            } as Record<string, string>
+          )[cartonLabel.side] || cartonLabel.side
+        }`
       : null,
-    cartonLabel.side ? `Label side: ${cartonLabel.side}` : null,
     cartonLabel.position
-      ? `Position: ${cartonLabel.position}`
+      ? `Position: ${
+          (
+            {
+              "lower-right": "Lower Right Corner",
+              "lower-left": "Lower Left Corner",
+              "upper-right": "Upper Right Corner",
+              centered: "Centered",
+            } as Record<string, string>
+          )[cartonLabel.position] || cartonLabel.position
+        }`
       : null,
     packingShipping.palletSlipSheetsRequired
       ? "Slip sheets required for mixed pallets."
       : null,
-    packingShipping.packingSlipPlacement
-      ? `Packing slip: ${packingShipping.packingSlipPlacement}`
+    packingShipping.packingSlipRequired && packingShipping.packingSlipPlacement
+      ? `Packing slip: ${
+          (
+            {
+              "lead-carton-pouch":
+                "Removable pouch attached to lead carton only",
+              "each-carton-pouch": "Removable pouch attached to each carton",
+              "inside-carton": "Packing slip placed inside carton",
+            } as Record<string, string>
+          )[packingShipping.packingSlipPlacement] ||
+          packingShipping.packingSlipPlacement
+        }`
       : null,
   ].filter(Boolean);
 
@@ -66,16 +84,44 @@ export function ReviewStep({ formData }: ReviewStepProps) {
       ? "Se requiere etiqueta GS1 en la caja."
       : null,
     cartonLabel.side
-      ? `Lado de etiqueta: ${cartonLabel.side}`
+      ? `Lado de etiqueta: ${
+          (
+            {
+              "long-side": "Lado más largo (Panel primario)",
+              "short-side": "Lado más corto (Panel final)",
+              top: "Superficie superior",
+              "largest-flat": "Lado plano más grande",
+            } as Record<string, string>
+          )[cartonLabel.side] || cartonLabel.side
+        }`
       : null,
     cartonLabel.position
-      ? `Posición: ${cartonLabel.position}`
+      ? `Posición: ${
+          (
+            {
+              "lower-right": "Esquina inferior derecha",
+              "lower-left": "Esquina inferior izquierda",
+              "upper-right": "Esquina superior derecha",
+              centered: "Centrado",
+            } as Record<string, string>
+          )[cartonLabel.position] || cartonLabel.position
+        }`
       : null,
     packingShipping.palletSlipSheetsRequired
       ? "Se requieren separadores en tarimas mixtas."
       : null,
-    packingShipping.packingSlipPlacement
-      ? `Lista de empaque: ${packingShipping.packingSlipPlacement}`
+    packingShipping.packingSlipRequired && packingShipping.packingSlipPlacement
+      ? `Lista de empaque: ${
+          (
+            {
+              "lead-carton-pouch":
+                "Funda removible en la caja principal únicamente",
+              "each-carton-pouch": "Funda removible en cada caja",
+              "inside-carton": "Lista de empaque dentro de la caja",
+            } as Record<string, string>
+          )[packingShipping.packingSlipPlacement] ||
+          packingShipping.packingSlipPlacement
+        }`
       : null,
   ].filter(Boolean);
 
@@ -85,26 +131,25 @@ export function ReviewStep({ formData }: ReviewStepProps) {
       {/* Program Identity */}
       {/* ----------------------------- */}
       <div className="bg-white border border-slate-200 rounded-lg p-6">
-        <h2 className="text-lg text-slate-900 mb-2">
-          Review Retailer Program
-        </h2>
+        <h2 className="text-lg text-slate-900 mb-2">Review Retailer Program</h2>
         <p className="text-sm text-slate-600 mb-6">
           Confirm all compliance requirements before saving.
         </p>
 
         <div className="grid grid-cols-2 gap-6">
           <Row label="Retailer" value={formData.retailerName} />
-          <Row
-            label="Program Name"
-            value={formData.programName}
-          />
-          <Row
-            label="Program Code"
-            value={formData.programCode}
-          />
+          <Row label="Program Name" value={formData.programName} />
+          <Row label="Program Code" value={formData.programCode} />
           <Row
             label="Program Type"
-            value={formData.programType}
+            value={
+              (
+                {
+                  b2b: "B2B",
+                  dropship: "Dropship",
+                } as Record<string, string>
+              )[formData.programType] || formData.programType
+            }
           />
         </div>
       </div>
@@ -128,9 +173,7 @@ export function ReviewStep({ formData }: ReviewStepProps) {
           />
           <Row
             label="Allow Mixed SKUs"
-            value={
-              packingShipping.allowMixedSkus ? "Yes" : null
-            }
+            value={packingShipping.allowMixedSkus ? "Yes" : null}
           />
           <Row
             label="Min Dimensions"
@@ -154,14 +197,33 @@ export function ReviewStep({ formData }: ReviewStepProps) {
         <div className="grid grid-cols-2 gap-6">
           <Row
             label="GS1 Label Required"
+            value={packingShipping.gs1LabelRequired ? "Yes" : "No"}
+          />
+          <Row
+            label="Label Side"
             value={
-              packingShipping.gs1LabelRequired ? "Yes" : "No"
+              (
+                {
+                  "long-side": "Longest Side (Primary Panel)",
+                  "short-side": "Shortest Side (End Panel)",
+                  top: "Top Surface",
+                  "largest-flat": "Largest Flat Side",
+                } as Record<string, string>
+              )[cartonLabel.side || ""] || cartonLabel.side
             }
           />
-          <Row label="Label Side" value={cartonLabel.side} />
           <Row
             label="Label Position"
-            value={cartonLabel.position}
+            value={
+              (
+                {
+                  "lower-right": "Lower Right Corner",
+                  "lower-left": "Lower Left Corner",
+                  "upper-right": "Upper Right Corner",
+                  centered: "Centered",
+                } as Record<string, string>
+              )[cartonLabel.position || ""] || cartonLabel.position
+            }
           />
           <Row
             label="Two Adjacent Sides"
@@ -169,7 +231,7 @@ export function ReviewStep({ formData }: ReviewStepProps) {
           />
           <Row
             label="Avoid Seams/Edges"
-            value={cartonLabel.avoidSeams ? "Yes" : null}
+            value={cartonLabel.avoidSeamsAndCorners ? "Yes" : null}
           />
           <Row
             label="Min Edge Distance"
@@ -205,11 +267,7 @@ export function ReviewStep({ formData }: ReviewStepProps) {
           />
           <Row
             label="ASN Load ID Required"
-            value={
-              packingShipping.parcelAsnRequiresLoadId
-                ? "Yes"
-                : null
-            }
+            value={packingShipping.parcelAsnRequiresLoadId ? "Yes" : null}
           />
         </div>
       </div>
@@ -222,10 +280,29 @@ export function ReviewStep({ formData }: ReviewStepProps) {
           Packing Slip & Documentation
         </h3>
 
-        <Row
-          label="Packing Slip Placement"
-          value={packingShipping.packingSlipPlacement}
-        />
+        <div className="grid grid-cols-2 gap-6">
+          <Row
+            label="Packing Slip Required"
+            value={packingShipping.packingSlipRequired ? "Yes" : "No"}
+          />
+          {packingShipping.packingSlipRequired && (
+            <Row
+              label="Packing Slip Placement"
+              value={
+                (
+                  {
+                    "lead-carton-pouch":
+                      "Removable pouch attached to lead carton only",
+                    "each-carton-pouch":
+                      "Removable pouch attached to each carton",
+                    "inside-carton": "Packing slip placed inside carton",
+                  } as Record<string, string>
+                )[packingShipping.packingSlipPlacement || ""] ||
+                packingShipping.packingSlipPlacement
+              }
+            />
+          )}
+        </div>
       </div>
 
       {/* ----------------------------- */}
@@ -255,23 +332,50 @@ export function ReviewStep({ formData }: ReviewStepProps) {
           />
           <Row
             label="PO Consolidation Allowed"
-            value={packingShipping.palletPoConsolidationAllowed}
-          />
-          <Row
-            label="SKU Mixing Rule"
-            value={packingShipping.palletSkuMixingRule}
-          />
-          <Row
-            label="Slip Sheets Required"
             value={
-              packingShipping.palletSlipSheetsRequired
-                ? "Yes"
-                : null
+              (
+                {
+                  no: "No — Do not mix POs",
+                  yes: "Yes — PO mixing allowed",
+                  conditional: "Allowed only with slip sheets",
+                } as Record<string, string>
+              )[packingShipping.palletPoConsolidationAllowed || ""] ||
+              packingShipping.palletPoConsolidationAllowed
             }
           />
           <Row
+            label="SKU Mixing Rule"
+            value={
+              (
+                {
+                  "single-sku-only": "Single SKU per pallet only",
+                  "mixed-allowed": "Mixed SKUs allowed",
+                  "mixed-only-if-needed":
+                    "Mixed SKUs allowed only when quantities require",
+                } as Record<string, string>
+              )[packingShipping.palletSkuMixingRule || ""] ||
+              packingShipping.palletSkuMixingRule
+            }
+          />
+          <Row
+            label="Slip Sheets Required"
+            value={packingShipping.palletSlipSheetsRequired ? "Yes" : null}
+          />
+          <Row
             label="Pallet Grade Requirement"
-            value={packingShipping.palletGradeRequirement}
+            value={
+              (
+                {
+                  standard_48x40: "Standard 48x40 White Wood Pallet",
+                  grade_b_plus: "Grade B (GMA Grade 2) or Higher",
+                  grade_a: "Grade A Required",
+                  ispm15: "Heat-Treated ISPM-15 Export",
+                  chep_peco: "CHEP / PECO Pool Required",
+                  custom: "Other / Custom Specification",
+                } as Record<string, string>
+              )[packingShipping.palletGradeRequirement || ""] ||
+              packingShipping.palletGradeRequirement
+            }
           />
         </div>
       </div>
@@ -290,17 +394,11 @@ export function ReviewStep({ formData }: ReviewStepProps) {
               <thead className="bg-slate-50 text-slate-600">
                 <tr>
                   {/* ✅ SCAC FIRST */}
-                  <th className="text-left px-4 py-2">
-                    Carrier Alpha / SCAC
-                  </th>
+                  <th className="text-left px-4 py-2">Carrier Alpha / SCAC</th>
 
-                  <th className="text-left px-4 py-2">
-                    Retailer Routing
-                  </th>
+                  <th className="text-left px-4 py-2">Retailer Routing</th>
 
-                  <th className="text-left px-4 py-2">
-                    Service Level Code
-                  </th>
+                  <th className="text-left px-4 py-2">Service Level Code</th>
 
                   <th className="text-left px-4 py-2">
                     ShipBob Carrier Service
@@ -310,22 +408,13 @@ export function ReviewStep({ formData }: ReviewStepProps) {
 
               <tbody>
                 {carrierMappings.map((m: any, idx: number) => (
-                  <tr
-                    key={idx}
-                    className="border-t border-slate-200"
-                  >
+                  <tr key={idx} className="border-t border-slate-200">
                     {/* ✅ SCAC VALUE FIRST */}
-                    <td className="px-4 py-2">
-                      {m.carrierAlphaCode || "—"}
-                    </td>
+                    <td className="px-4 py-2">{m.carrierAlphaCode || "—"}</td>
 
-                    <td className="px-4 py-2">
-                      {m.carrierRouting || "—"}
-                    </td>
+                    <td className="px-4 py-2">{m.carrierRouting || "—"}</td>
 
-                    <td className="px-4 py-2">
-                      {m.serviceLevelCode || "—"}
-                    </td>
+                    <td className="px-4 py-2">{m.serviceLevelCode || "—"}</td>
 
                     <td className="px-4 py-2">
                       {m.shipbobCarrierService
@@ -365,9 +454,7 @@ export function ReviewStep({ formData }: ReviewStepProps) {
       {/* ----------------------------- */}
       <div className="bg-slate-900 text-white rounded-lg p-6 space-y-5">
         <div className="flex justify-between items-center">
-          <h3 className="font-semibold">
-            Operator Instruction Preview (Mock)
-          </h3>
+          <h3 className="font-semibold">Operator Instruction Preview (Mock)</h3>
 
           <button
             onClick={handleDownloadMock}
@@ -399,8 +486,8 @@ export function ReviewStep({ formData }: ReviewStepProps) {
       </div>
 
       <p className="text-xs text-slate-500 px-1">
-        Once saved, these rules apply to all open and future
-        orders under this Retailer Program.
+        Once saved, these rules apply to all open and future orders under this
+        Retailer Program.
       </p>
     </div>
   );

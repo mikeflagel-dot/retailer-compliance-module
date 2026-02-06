@@ -54,8 +54,7 @@ export function TradingPartnerList({
   const [pageSize, setPageSize] = useState(25);
   const [page, setPage] = useState(1);
 
-  const [pendingDeleteId, setPendingDeleteId] =
-    useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   /** Filtering */
   const filtered = useMemo(() => {
@@ -83,10 +82,7 @@ export function TradingPartnerList({
   }, [partners, search]);
 
   /** Pagination */
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filtered.length / pageSize)
-  );
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const safePage = Math.min(page, totalPages);
 
   const pageRows = useMemo(() => {
@@ -136,9 +132,8 @@ export function TradingPartnerList({
               <th className="text-left px-4 py-3">Retailer</th>
               <th className="text-left px-4 py-3">Program Type</th>
               <th className="text-left px-4 py-3">Merchant</th>
-              <th className="text-left px-4 py-3">TP ID</th>
+              <th className="text-left px-4 py-3">Trading Partner Id</th>
               <th className="text-left px-4 py-3">GS1 Prefix</th>
-              <th className="text-left px-4 py-3">ISA</th>
               <th className="text-left px-4 py-3">Updated</th>
               <th className="text-right px-4 py-3">Actions</th>
             </tr>
@@ -157,10 +152,7 @@ export function TradingPartnerList({
                   <td className="px-4 py-3">{d.merchant || "—"}</td>
                   <td className="px-4 py-3">{d.tradingPartnerId || "—"}</td>
                   <td className="px-4 py-3">{d.merchantGs1Prefix || "—"}</td>
-                  <td className="px-4 py-3">{d.merchantIsa || "—"}</td>
-                  <td className="px-4 py-3">
-                    {formatDate(p.updatedAt)}
-                  </td>
+                  <td className="px-4 py-3">{formatDate(p.updatedAt)}</td>
 
                   <td className="px-4 py-3 text-right">
                     <div className="inline-flex gap-3">
@@ -197,8 +189,7 @@ export function TradingPartnerList({
             </h3>
 
             <p className="text-sm text-slate-600 mb-6">
-              This action cannot be undone and may impact live
-              integrations.
+              This action cannot be undone and may impact live integrations.
             </p>
 
             <div className="flex justify-end gap-3">
