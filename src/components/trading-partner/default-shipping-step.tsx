@@ -12,11 +12,7 @@ export function DefaultShippingStep({
   /** -----------------------------
    * Freight Restrictions
    * ------------------------------ */
-  const freightRestrictedTerms = [
-    "Collect",
-    "Third Party",
-    "Bill to Sender",
-  ];
+  const freightRestrictedTerms = ["Collect", "Third Party", "Bill to Sender"];
 
   const isFreight = formData.fulfillmentMode === "Freight";
 
@@ -30,9 +26,7 @@ export function DefaultShippingStep({
   const handleFulfillmentModeChange = (mode: string) => {
     const resetPaymentTerms =
       mode === "Freight" &&
-      freightRestrictedTerms.includes(
-        formData.shippingPaymentTerms,
-      );
+      freightRestrictedTerms.includes(formData.shippingPaymentTerms);
 
     updateFormData({
       fulfillmentMode: mode,
@@ -49,17 +43,15 @@ export function DefaultShippingStep({
           Default Shipment Details
         </h2>
         <p className="text-sm text-slate-600 mb-6">
-          Establish the default shipping behavior that will be
-          automatically applied to all EDI orders ingested for
-          this Trading Partner.
+          Establish the default shipping behavior that will be automatically
+          applied to all EDI orders ingested for this Trading Partner.
         </p>
 
         <div className="space-y-5">
           {/* Fulfillment Mode */}
           <div>
             <label className="block text-sm text-slate-700 mb-2">
-              Fulfillment Mode{" "}
-              <span className="text-red-500">*</span>
+              Fulfillment Mode <span className="text-red-500">*</span>
             </label>
 
             <div className="flex gap-4">
@@ -75,28 +67,23 @@ export function DefaultShippingStep({
                     }
                     className="w-4 h-4 appearance-none rounded-full border border-slate-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
-                  <span className="ml-2 text-sm text-slate-700">
-                    {mode}
-                  </span>
+                  <span className="ml-2 text-sm text-slate-700">{mode}</span>
                 </label>
               ))}
             </div>
 
             <p className="mt-1 text-xs text-slate-500">
-              Parcel: Small-package shipment (usually less than
-              150 lbs.)
+              Parcel: Small-package shipment (usually less than 150 lbs.)
             </p>
             <p className="mt-1 text-xs text-slate-500">
-              Freight: Large or heavy shipment, usually
-              requiring palletization
+              Freight: Large or heavy shipment, usually requiring palletization
             </p>
           </div>
 
           {/* Shipping Payment Terms */}
           <div>
             <label className="block text-sm text-slate-700 mb-2">
-              Payment Terms{" "}
-              <span className="text-red-500">*</span>
+              Payment Terms <span className="text-red-500">*</span>
             </label>
 
             <div className="space-y-3">
@@ -104,47 +91,39 @@ export function DefaultShippingStep({
                 {
                   value: "ShipBob Prepaid",
                   title: "ShipBob Prepaid",
-                  desc:
-                    "ShipBob’s carrier account is used and charges are billed through ShipBob.",
+                  desc: "ShipBob’s carrier account is used and charges are billed through ShipBob.",
                 },
                 {
                   value: "Merchant Prepaid",
                   title: "Merchant Prepaid",
-                  desc:
-                    "Merchant purchases labels externally and provides them to ShipBob.",
+                  desc: "Merchant purchases labels externally and provides them to ShipBob.",
                 },
                 {
                   value: "Third Party",
                   title: "Third Party",
-                  desc:
-                    "A retailer or third-party carrier account is billed directly.",
+                  desc: "A retailer or third-party carrier account is billed directly.",
                   parcelOnly: true,
                 },
                 {
                   value: "Collect",
                   title: "Collect",
-                  desc:
-                    "Shipping charges are collected from the receiver upon delivery.",
+                  desc: "Shipping charges are collected from the receiver upon delivery.",
                   parcelOnly: true,
                 },
                 {
                   value: "Bill to Sender",
                   title: "Bill to Sender",
-                  desc:
-                    "Sender’s carrier account is billed directly by the carrier.",
+                  desc: "Sender’s carrier account is billed directly by the carrier.",
                   parcelOnly: true,
                 },
               ].map((term) => {
                 if (isFreight && term.parcelOnly) return null;
 
-                const isSelected =
-                  formData.shippingPaymentTerms === term.value;
+                const isSelected = formData.shippingPaymentTerms === term.value;
 
                 const showsBillingNotice =
                   isSelected &&
-                  ["Third Party", "Bill to Sender"].includes(
-                    term.value,
-                  ) &&
+                  ["Third Party", "Bill to Sender"].includes(term.value) &&
                   formData.fulfillmentMode === "Parcel";
 
                 return (
@@ -177,9 +156,8 @@ export function DefaultShippingStep({
                       <div className="mt-2 ml-6 flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded">
                         <Info className="w-4 h-4 text-blue-600 mt-0.5" />
                         <p className="text-xs text-blue-700">
-                          This payment term requires configuring
-                          carrier billing accounts in the next
-                          step.
+                          This payment term requires configuring carrier billing
+                          accounts in the next step.
                         </p>
                       </div>
                     )}
@@ -189,8 +167,8 @@ export function DefaultShippingStep({
 
               {isFreight && (
                 <p className="text-xs text-slate-500 mt-2">
-                  Collect, Third Party, and Bill-to payment
-                  terms are not supported for Freight shipments.
+                  Collect, Third Party, and Bill-to payment terms are not
+                  supported for Freight shipments.
                 </p>
               )}
             </div>
@@ -203,8 +181,8 @@ export function DefaultShippingStep({
             </h3>
 
             <p className="text-sm text-slate-600 mb-4">
-              Enable if this Trading Partner requires
-              order-level shipping method overrides.
+              Enable if this Trading Partner requires order-level shipping
+              method overrides.
             </p>
 
             <label className="flex items-center gap-2 mb-4">
@@ -220,9 +198,7 @@ export function DefaultShippingStep({
                 className="w-4 h-4 appearance-none bg-white border border-slate-300 rounded checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-500"
               />
               <span className="text-sm text-slate-700">
-                {formData.overridesEnabled
-                  ? "Enabled"
-                  : "Disabled"}
+                {formData.overridesEnabled ? "Enabled" : "Disabled"}
               </span>
             </label>
 
@@ -241,9 +217,7 @@ export function DefaultShippingStep({
                   }
                   className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="">
-                    Select an override...
-                  </option>
+                  <option value="">Select an override...</option>
                   <option value="MerchantXYZRetailerABCShipOption">
                     MerchantXYZRetailerABCShipOption
                   </option>
@@ -256,11 +230,74 @@ export function DefaultShippingStep({
                 </select>
 
                 <p className="mt-1 text-xs text-slate-500">
-                  Overrides apply during routing and label
-                  generation.
+                  Overrides apply during routing and label generation.
                 </p>
               </div>
             )}
+          </div>
+
+          {/* Label Details */}
+          <div className="pt-6 border-t border-slate-200">
+            <h3 className="text-sm text-slate-900 mb-1">Label Details</h3>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-slate-700 mb-2">
+                  Shipping Label Company Name
+                </label>
+                <input
+                  type="text"
+                  value={formData.shippingLabelCompanyName || ""}
+                  onChange={(e) =>
+                    updateFormData({
+                      shippingLabelCompanyName: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
+                />
+                <p className="mt-1 text-xs text-slate-500">
+                  This name will appear on shipping labels.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm text-slate-700 mb-2">
+                  Shipping Label Phone Number
+                </label>
+                <input
+                  type="text"
+                  value={formData.shippingLabelPhoneNumber || ""}
+                  onChange={(e) =>
+                    updateFormData({
+                      shippingLabelPhoneNumber: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
+                />
+                <p className="mt-1 text-xs text-slate-500">
+                  Phone number printed on shipping labels.
+                </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  Format hint: (###) ###-#### or ###-###-####
+                </p>
+              </div>
+
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.printCustomerTicketNumberOnLabel || false}
+                  onChange={(e) =>
+                    updateFormData({
+                      printCustomerTicketNumberOnLabel: e.target.checked,
+                    })
+                  }
+                  className="w-4 h-4 appearance-none bg-white border border-slate-300 rounded checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-500"
+                />
+                <span className="text-sm text-slate-700">
+                  Print Customer Ticket Number on Labels
+                </span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
