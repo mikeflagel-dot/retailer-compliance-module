@@ -352,7 +352,7 @@ export function PackingShippingStep({
       {/* ----------------------------- */}
       <div className="bg-white border border-slate-200 rounded-lg p-6">
         <h2 className="text-lg text-slate-900 mb-1">
-          Packing Slip & Documentation Rules
+          Packing Slip Requirements
         </h2>
         <p className="text-sm text-slate-600 mb-6">
           Define where packing lists must be applied during packing and
