@@ -84,7 +84,7 @@ export function DocumentsLabelsStep({
 
             {/* Copy Requirements (existing behavior) */}
             <div>
-              <label className="block text-sm text-slate-900 mb-2 font-bold">
+              <label className="block text-sm text-slate-700 mb-2">
                 Packing Slip Copy Requirements
               </label>
               <div className="space-y-3">
@@ -275,7 +275,7 @@ export function DocumentsLabelsStep({
 
             {/* Structured Carton Label Placement (existing keys) */}
             <div className="space-y-4">
-              <label className="block text-sm text-slate-700">
+              <label className="block text-sm text-slate-700 mb-2">
                 Carton Label Placement
               </label>
 
