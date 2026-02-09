@@ -50,8 +50,8 @@ export function DefaultShippingStep({
         <div className="space-y-5">
           {/* Fulfillment Mode */}
           <div>
-            <label className="block text-sm text-slate-700 mb-2">
-              Fulfillment Mode <span className="text-red-500">*</span>
+            <label className="block text-sm text-slate-700 mb-2 font-bold">
+              Mode <span className="text-red-500">*</span>
             </label>
 
             <div className="flex gap-4">
@@ -82,7 +82,7 @@ export function DefaultShippingStep({
 
           {/* Shipping Payment Terms */}
           <div>
-            <label className="block text-sm text-slate-700 mb-2">
+            <label className="block text-sm text-slate-700 mb-2 font-bold">
               Payment Terms <span className="text-red-500">*</span>
             </label>
 
@@ -176,7 +176,7 @@ export function DefaultShippingStep({
 
           {/* Shipping Method Overrides */}
           <div className="pt-6 border-t border-slate-200">
-            <h3 className="text-sm text-slate-900 mb-1">
+            <h3 className="text-sm text-slate-900 mb-1 font-bold">
               Shipping Method Overrides
             </h3>
 
@@ -238,7 +238,7 @@ export function DefaultShippingStep({
 
           {/* Label Details */}
           <div className="pt-6 border-t border-slate-200">
-            <h3 className="text-sm text-slate-900 mb-1">Label Details</h3>
+            <h3 className="text-sm text-slate-900 mb-1 font-bold">Label Details</h3>
 
             <div className="space-y-4">
               <div>
@@ -276,9 +276,6 @@ export function DefaultShippingStep({
                 />
                 <p className="mt-1 text-xs text-slate-500">
                   Phone number printed on shipping labels.
-                </p>
-                <p className="mt-1 text-xs text-slate-500">
-                  Format hint: (###) ###-#### or ###-###-####
                 </p>
               </div>
 
