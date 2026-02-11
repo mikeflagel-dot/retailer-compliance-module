@@ -29,19 +29,33 @@ export function PackingShippingStep({
    * ------------------------------ */
   const programType = formData.programType;
 
+  /** -----------------------------
+   * Derived: Mixing SKUs dropdown value
+   * ------------------------------ */
+  const mixingSkusValue = !packingShipping.allowMixedSkus
+    ? "not-allowed"
+    : packingShipping.palletSkuMixingRule === "mixed-only-if-needed" ||
+        packingShipping.limitSkuToOneMixedPallet ||
+        packingShipping.palletDisallowMixedExpirationDates ||
+        packingShipping.palletSlipSheetsRequired
+      ? "allowed-with-restrictions"
+      : "allowed-no-restrictions";
+
   const checkboxClass =
     "h-4 w-4 rounded border border-slate-300 bg-white appearance-none checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500";
 
   return (
     <div className="space-y-6">
       {/* ----------------------------- */}
-      {/* Carton Requirements */}
+      {/* Physical Handling Constraints */}
       {/* ----------------------------- */}
       <div className="bg-white border border-slate-200 rounded-lg p-6">
-        <h2 className="text-lg text-slate-900 mb-1">Carton Requirements</h2>
+        <h2 className="text-lg text-slate-900 mb-1">
+          Physical Handling Constraints
+        </h2>
         <p className="text-sm text-slate-600 mb-6">
-          Define carton-level packing rules such as weight limits, dimensions,
-          and SKU mixing.
+          Define physical constraints such as carton weight limits and
+          minimum/maximum dimensions.
         </p>
 
         <div className="space-y-5">
@@ -67,7 +81,7 @@ export function PackingShippingStep({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-slate-700 mb-2">
-                Minimum Dimensions (L x W x H)
+                Carton Minimum Dimensions (in)
               </label>
               <input
                 type="text"
@@ -78,13 +92,13 @@ export function PackingShippingStep({
                   })
                 }
                 className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
-                placeholder='e.g., 12" x 10" x 6"'
+                placeholder="e.g., L x W x H"
               />
             </div>
 
             <div>
               <label className="block text-sm text-slate-700 mb-2">
-                Maximum Dimensions (L x W x H)
+                Carton Maximum Dimensions (in)
               </label>
               <input
                 type="text"
@@ -95,37 +109,63 @@ export function PackingShippingStep({
                   })
                 }
                 className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
-                placeholder='e.g., 30" x 20" x 20"'
+                placeholder="e.g., L x W x H"
               />
             </div>
           </div>
 
-          {/* Mixed SKU Toggle */}
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={packingShipping.allowMixedSkus || false}
-              onChange={(e) =>
-                updatePackingShipping({
-                  allowMixedSkus: e.target.checked,
-                })
-              }
-              className={checkboxClass}
-            />
-            <label className="text-sm text-slate-700">
-              Allow Mixed SKUs in Carton
-            </label>
-          </div>
+          {/* B2B Only: Pallet Height/Weight */}
+          {programType === "b2b" && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-slate-700 mb-2">
+                  Pallet Max Height (in)
+                </label>
+                <input
+                  type="number"
+                  value={packingShipping.palletMaxHeightIn || ""}
+                  onChange={(e) =>
+                    updatePackingShipping({
+                      palletMaxHeightIn: Number(e.target.value),
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
+                  placeholder="e.g. 75"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-slate-700 mb-2">
+                  Pallet Max Weight (lbs)
+                </label>
+                <input
+                  type="number"
+                  value={packingShipping.palletMaxWeightLb || ""}
+                  onChange={(e) =>
+                    updatePackingShipping({
+                      palletMaxWeightLb: Number(e.target.value),
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
+                  placeholder="e.g. 2000"
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
+      {/* Carton label configuration omitted from this step (documentation/labels excluded) */}
+
       {/* ----------------------------- */}
-      {/* Parcel Requirements */}
+      {/* Parcel Shipment Constraints */}
       {/* ----------------------------- */}
       <div className="bg-white border border-slate-200 rounded-lg p-6">
-        <h2 className="text-lg text-slate-900 mb-1">Parcel Requirements</h2>
+        <h2 className="text-lg text-slate-900 mb-1">
+          Parcel Shipment Constraints
+        </h2>
         <p className="text-sm text-slate-600 mb-6">
-          Define small-package shipment limits and packing slip placement rules.
+          Define physical constraints for parcel shipments.
         </p>
 
         <div className="space-y-5">
@@ -167,7 +207,7 @@ export function PackingShippingStep({
             </div>
           </div>
 
-          {/* ASN Load ID */}
+          {/* ASN Load ID (Parcel) */}
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -180,184 +220,168 @@ export function PackingShippingStep({
               className={checkboxClass}
             />
             <label className="text-sm text-slate-700">
-              Load ID Required in ASN
+              Load ID Required in ASN (Parcel)
             </label>
           </div>
         </div>
       </div>
 
       {/* ----------------------------- */}
-      {/* Pallet Requirements (B2B ONLY) */}
+      {/* Handling Unit Mixing Policies */}
+      {/* ----------------------------- */}
+      <div className="bg-white border border-slate-200 rounded-lg p-6">
+        <h2 className="text-lg text-slate-900 mb-1">
+          Handling Unit Mixing Policies
+        </h2>
+        <p className="text-sm text-slate-600 mb-6">
+          Configure whether multiple purchase orders or multiple SKUs may be
+          combined within the same handling unit. These are related policy
+          decisions but can be set independently.
+        </p>
+
+        <div className="space-y-5">
+          {/* Mixing Purchase Orders */}
+          <div>
+            <label className="block text-sm text-slate-700 mb-2">
+              Mixing Purchase Orders
+            </label>
+            <select
+              value={packingShipping.palletPoConsolidationAllowed || ""}
+              onChange={(e) =>
+                updatePackingShipping({
+                  palletPoConsolidationAllowed: e.target.value,
+                })
+              }
+              className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white"
+            >
+              <option value="">Select...</option>
+              <option value="no">No — Do not mix POs</option>
+              <option value="yes">Yes — PO mixing allowed</option>
+              <option value="conditional">Allowed only with slip sheets</option>
+            </select>
+            <p className="text-xs text-slate-500 mt-1">
+              Controls whether multiple purchase orders may be combined within
+              the same handling unit.
+            </p>
+          </div>
+
+          {/* Mixing SKUs */}
+          <div>
+            <label className="block text-sm text-slate-700 mb-2">
+              Mixing SKUs
+            </label>
+            <select
+              value={mixingSkusValue}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "not-allowed") {
+                  updatePackingShipping({
+                    allowMixedSkus: false,
+                    palletSkuMixingRule: "single-sku-only",
+                  });
+                } else if (value === "allowed-no-restrictions") {
+                  updatePackingShipping({
+                    allowMixedSkus: true,
+                    palletSkuMixingRule: "mixed-allowed",
+                  });
+                } else {
+                  updatePackingShipping({
+                    allowMixedSkus: true,
+                    palletSkuMixingRule: "mixed-only-if-needed",
+                  });
+                }
+              }}
+              className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white"
+            >
+              <option value="not-allowed">
+                Not allowed — Single SKU per handling unit
+              </option>
+              <option value="allowed-no-restrictions">
+                Allowed — No restrictions
+              </option>
+              <option value="allowed-with-restrictions">
+                Allowed with restrictions
+              </option>
+            </select>
+            <p className="text-xs text-slate-500 mt-1">
+              Controls whether multiple SKUs may be combined within the same
+              handling unit.
+            </p>
+
+            {mixingSkusValue === "allowed-with-restrictions" && (
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={packingShipping.limitSkuToOneMixedPallet || false}
+                    onChange={(e) =>
+                      updatePackingShipping({
+                        limitSkuToOneMixedPallet: e.target.checked,
+                      })
+                    }
+                    className={checkboxClass}
+                  />
+                  <label className="text-sm text-slate-700">
+                    Each SKU may appear on only one mixed pallet per PO
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={
+                      packingShipping.palletDisallowMixedExpirationDates ||
+                      false
+                    }
+                    onChange={(e) =>
+                      updatePackingShipping({
+                        palletDisallowMixedExpirationDates: e.target.checked,
+                      })
+                    }
+                    className={checkboxClass}
+                  />
+                  <label className="text-sm text-slate-700">
+                    Do not mix multiple expiration dates for the same SKU on a
+                    pallet
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={packingShipping.palletSlipSheetsRequired || false}
+                    onChange={(e) =>
+                      updatePackingShipping({
+                        palletSlipSheetsRequired: e.target.checked,
+                      })
+                    }
+                    className={checkboxClass}
+                  />
+                  <label className="text-sm text-slate-700">
+                    Require slip sheets between SKUs when pallets are mixed
+                  </label>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ----------------------------- */}
+      {/* Pallet Material & Specification Requirements (B2B Only) */}
       {/* ----------------------------- */}
       {programType === "b2b" && (
         <div className="bg-white border border-slate-200 rounded-lg p-6">
-          <h2 className="text-lg text-slate-900 mb-1">Pallet Requirements</h2>
+          <h2 className="text-lg text-slate-900 mb-1">
+            Pallet Material & Specification Requirements (B2B Only)
+          </h2>
           <p className="text-sm text-slate-600 mb-6">
-            Freight pallet constraints such as max height, max weight, PO
-            mixing, SKU mixing, and label requirements (B2B only).
+            Define pallet material grade and any custom specifications.
           </p>
 
           <div className="space-y-5">
-            {/* Max Height + Weight */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm text-slate-700 mb-2">
-                  Pallet Max Height (in)
-                </label>
-                <input
-                  type="number"
-                  value={packingShipping.palletMaxHeightIn || ""}
-                  onChange={(e) =>
-                    updatePackingShipping({
-                      palletMaxHeightIn: Number(e.target.value),
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-slate-700 mb-2">
-                  Pallet Max Weight (lbs)
-                </label>
-                <input
-                  type="number"
-                  value={packingShipping.palletMaxWeightLb || ""}
-                  onChange={(e) =>
-                    updatePackingShipping({
-                      palletMaxWeightLb: Number(e.target.value),
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
-                />
-              </div>
-            </div>
-
-            {/* PO Consolidation */}
-            <div>
-              <label className="block text-sm text-slate-700 mb-2">
-                Consolidation of POs on a Pallet Allowed?
-              </label>
-
-              <select
-                value={packingShipping.palletPoConsolidationAllowed || ""}
-                onChange={(e) =>
-                  updatePackingShipping({
-                    palletPoConsolidationAllowed: e.target.value,
-                  })
-                }
-                className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white"
-              >
-                <option value="">Select...</option>
-                <option value="no">No — Do not mix POs</option>
-                <option value="yes">Yes — PO mixing allowed</option>
-                <option value="conditional">
-                  Allowed only with slip sheets
-                </option>
-              </select>
-            </div>
-
-            {/* Pallet SKU Mixing Rules */}
-            <div className="border-t border-slate-200 pt-5 space-y-4">
-              <h3 className="text-sm font-medium text-slate-900">
-                Pallet SKU Mixing Rules
-              </h3>
-
-              <div>
-                <label className="block text-sm text-slate-700 mb-2">
-                  Mixed SKUs Allowed on a Pallet?
-                </label>
-
-                <select
-                  value={packingShipping.palletSkuMixingRule || ""}
-                  onChange={(e) =>
-                    updatePackingShipping({
-                      palletSkuMixingRule: e.target.value,
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm bg-white"
-                >
-                  <option value="">Select...</option>
-                  <option value="single-sku-only">
-                    Single SKU per pallet only
-                  </option>
-                  <option value="mixed-allowed">Mixed SKUs allowed</option>
-                  <option value="mixed-only-if-needed">
-                    Mixed SKUs allowed only when quantities require
-                  </option>
-                </select>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={packingShipping.palletGroupSkuByLayer || false}
-                  onChange={(e) =>
-                    updatePackingShipping({
-                      palletGroupSkuByLayer: e.target.checked,
-                    })
-                  }
-                  className={checkboxClass}
-                />
-                <label className="text-sm text-slate-700">
-                  Group same-SKU cartons together by layer on mixed pallets
-                </label>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={packingShipping.limitSkuToOneMixedPallet || false}
-                  onChange={(e) =>
-                    updatePackingShipping({
-                      limitSkuToOneMixedPallet: e.target.checked,
-                    })
-                  }
-                  className={checkboxClass}
-                />
-                <label className="text-sm text-slate-700">
-                  Each SKU may appear on only one mixed pallet per PO
-                </label>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={
-                    packingShipping.palletDisallowMixedExpirationDates || false
-                  }
-                  onChange={(e) =>
-                    updatePackingShipping({
-                      palletDisallowMixedExpirationDates: e.target.checked,
-                    })
-                  }
-                  className={checkboxClass}
-                />
-                <label className="text-sm text-slate-700">
-                  Do not mix multiple expiration dates for the same SKU on a
-                  pallet
-                </label>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={packingShipping.palletSlipSheetsRequired || false}
-                  onChange={(e) =>
-                    updatePackingShipping({
-                      palletSlipSheetsRequired: e.target.checked,
-                    })
-                  }
-                  className={checkboxClass}
-                />
-                <label className="text-sm text-slate-700">
-                  Require slip sheets between SKUs when pallets are mixed
-                </label>
-              </div>
-            </div>
-
             {/* Pallet Grade Requirement */}
-            <div className="border-t border-slate-200 pt-5">
+            <div>
               <label className="block text-sm text-slate-700 mb-2">
                 Pallet Grade Requirement
               </label>
@@ -380,9 +404,7 @@ export function PackingShippingStep({
                 <option value="standard_48x40">
                   Standard 48x40 White Wood Pallet
                 </option>
-                <option value="grade_b_plus">
-                  Grade B (GMA Grade 2) or Higher
-                </option>
+                <option value="grade_b_plus">Grade B (GMA Grade 2)</option>
                 <option value="grade_a">Grade A Required</option>
                 <option value="ispm15">Heat-Treated ISPM-15 Export</option>
                 <option value="chep_peco">CHEP / PECO Pool Required</option>

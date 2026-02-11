@@ -51,7 +51,7 @@ export function OverviewStep({
             })
           }
           className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
-          placeholder="e.g., Target"
+          placeholder="e.g. Target"
         />
       </div>
 

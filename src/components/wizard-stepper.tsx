@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 interface WizardStepperProps {
   steps: { id: string; label: string }[];
   currentStep: number;
@@ -11,6 +12,16 @@ export function WizardStepper({
   currentStep,
   onStepClick,
 }: WizardStepperProps) {
+  // Scroll to top whenever the current step changes
+  useEffect(() => {
+    const container = document.getElementById("main-scroll");
+    if (container) {
+      container.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [currentStep]);
+
   return (
     <div className="flex items-center gap-6 border-b border-slate-200 pb-4">
       {steps.map((step, index) => {
@@ -34,8 +45,8 @@ export function WizardStepper({
                 isActive
                   ? "bg-blue-600 text-white border-blue-600"
                   : isCompleted
-                  ? "bg-blue-100 text-blue-700 border-blue-300"
-                  : "bg-white text-slate-500 border-slate-300"
+                    ? "bg-blue-100 text-blue-700 border-blue-300"
+                    : "bg-white text-slate-500 border-slate-300"
               }`}
             >
               {index + 1}
@@ -47,8 +58,8 @@ export function WizardStepper({
                 isActive
                   ? "text-slate-900"
                   : isCompleted
-                  ? "text-slate-700"
-                  : "text-slate-500"
+                    ? "text-slate-700"
+                    : "text-slate-500"
               }`}
             >
               {step.label}

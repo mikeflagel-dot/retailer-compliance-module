@@ -64,6 +64,8 @@ export function ReviewStep({ formData }: ReviewStepProps) {
     packingShipping.palletSlipSheetsRequired
       ? "Slip sheets required for mixed pallets."
       : null,
+    // Always-required instruction for mixed pallets
+    "On mixed pallets, group same-SKU cartons together by layer.",
     packingShipping.packingSlipRequired && packingShipping.packingSlipPlacement
       ? `Packing slip: ${
           (
@@ -76,6 +78,16 @@ export function ReviewStep({ formData }: ReviewStepProps) {
           )[packingShipping.packingSlipPlacement] ||
           packingShipping.packingSlipPlacement
         }`
+      : null,
+    formData.packingSlipContentScope
+      ? (
+          {
+            "unit-specific":
+              "Each handling unit includes a packing slip listing only the items physically contained in that specific handling unit.",
+            master:
+              "Each handling unit includes a packing slip listing all items on the purchase order, even if some items are not physically contained in that unit.",
+          } as Record<string, string>
+        )[formData.packingSlipContentScope] || null
       : null,
   ].filter(Boolean);
 
@@ -110,6 +122,8 @@ export function ReviewStep({ formData }: ReviewStepProps) {
     packingShipping.palletSlipSheetsRequired
       ? "Se requieren separadores en tarimas mixtas."
       : null,
+    // Instrucción siempre requerida para tarimas mixtas
+    "En tarimas mixtas, agrupa cajas del mismo SKU por capa.",
     packingShipping.packingSlipRequired && packingShipping.packingSlipPlacement
       ? `Lista de empaque: ${
           (
@@ -122,6 +136,16 @@ export function ReviewStep({ formData }: ReviewStepProps) {
           )[packingShipping.packingSlipPlacement] ||
           packingShipping.packingSlipPlacement
         }`
+      : null,
+    formData.packingSlipContentScope
+      ? (
+          {
+            "unit-specific":
+              "Cada unidad incluye una lista de empaque que lista únicamente los artículos físicamente contenidos en esa unidad específica.",
+            master:
+              "Cada unidad incluye una lista de empaque que lista todos los artículos de la orden de compra, aunque algunos no estén físicamente contenidos en esa unidad.",
+          } as Record<string, string>
+        )[formData.packingSlipContentScope] || null
       : null,
   ].filter(Boolean);
 
@@ -285,6 +309,18 @@ export function ReviewStep({ formData }: ReviewStepProps) {
             label="Packing Slip Required"
             value={packingShipping.packingSlipRequired ? "Yes" : "No"}
           />
+          {/* Packing Slip Content Scope */}
+          <Row
+            label="Packing Slip Content per Handling Unit"
+            value={
+              (
+                {
+                  "unit-specific": "Each unit lists only items it contains",
+                  master: "Each unit lists all PO items (master slip)",
+                } as Record<string, string>
+              )[formData.packingSlipContentScope || ""] || null
+            }
+          />
           {packingShipping.packingSlipRequired && (
             <Row
               label="Packing Slip Placement"
@@ -377,6 +413,38 @@ export function ReviewStep({ formData }: ReviewStepProps) {
               packingShipping.palletGradeRequirement
             }
           />
+
+          {/* Pallet Label Placement Summary */}
+          {packingShipping.palletLabelPlacement && (
+            <>
+              <Row
+                label="Pallet Labels Applied To Sides"
+                value={
+                  (
+                    {
+                      "lead-side-only": "Lead Side Only",
+                      "two-opposite": "Two Opposite Sides",
+                      "four-sides": "All Four Sides",
+                    } as Record<string, string>
+                  )[packingShipping.palletLabelPlacement.sides || ""] ||
+                  packingShipping.palletLabelPlacement.sides
+                }
+              />
+              <Row
+                label="Pallet Label Position"
+                value={
+                  (
+                    {
+                      "lower-right": "Lower Right Corner",
+                      "upper-right": "Upper Right Corner",
+                      centered: "Centered",
+                    } as Record<string, string>
+                  )[packingShipping.palletLabelPlacement.position || ""] ||
+                  packingShipping.palletLabelPlacement.position
+                }
+              />
+            </>
+          )}
         </div>
       </div>
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
+import { Sidebar } from "./components/sidebar";
 
 import { WizardStepper } from "./components/wizard-stepper";
 
@@ -242,108 +243,113 @@ export default function App() {
    * ------------------------------ */
   if (view === "menu") {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <div className="mx-auto max-w-7xl px-8 py-8 space-y-6">
-          {/* Header */}
-          <div>
-            <h1 className="text-2xl text-slate-900 mb-2">
-              Retail Compliance Module
-            </h1>
-            <p className="text-sm text-slate-600">
-              Manage Retailer Programs and Trading Partners.
-            </p>
-          </div>
+      <div className="h-screen flex">
+        <Sidebar />
 
-          {/* Tabs */}
-          <div className="flex gap-2 border-b border-slate-200">
-            <button
-              onClick={() => setMenuTab("retailer-programs")}
-              className={`px-4 py-2 text-sm font-medium ${
-                menuTab === "retailer-programs"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Retailer Programs ({retailerPrograms.length})
-            </button>
+        {/* Main content (unchanged app content) */}
+        <div id="main-scroll" className="flex-1 overflow-auto bg-slate-50">
+          <div className="mx-auto max-w-7xl px-8 py-8 space-y-6">
+            {/* Header */}
+            <div>
+              <h1 className="text-2xl text-slate-900 mb-2">
+                Retail Compliance Module
+              </h1>
+              <p className="text-sm text-slate-600">
+                Manage Retailer Programs and Trading Partners.
+              </p>
+            </div>
 
-            <button
-              onClick={() => setMenuTab("trading-partners")}
-              className={`px-4 py-2 text-sm font-medium ${
-                menuTab === "trading-partners"
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Trading Partners ({tradingPartners.length})
-            </button>
-          </div>
+            {/* Tabs */}
+            <div className="flex gap-2 border-b border-slate-200">
+              <button
+                onClick={() => setMenuTab("retailer-programs")}
+                className={`px-4 py-2 text-sm font-medium ${
+                  menuTab === "retailer-programs"
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                Retailer Programs ({retailerPrograms.length})
+              </button>
 
-          {/* Retailer Programs */}
-          {menuTab === "retailer-programs" && (
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg text-slate-900">Retailer Programs</h2>
+              <button
+                onClick={() => setMenuTab("trading-partners")}
+                className={`px-4 py-2 text-sm font-medium ${
+                  menuTab === "trading-partners"
+                    ? "border-b-2 border-blue-600 text-blue-600"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                Trading Partners ({tradingPartners.length})
+              </button>
+            </div>
 
-                <button
-                  onClick={() => {
-                    setEditingRetailerProgramId(null);
+            {/* Retailer Programs */}
+            {menuTab === "retailer-programs" && (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg text-slate-900">Retailer Programs</h2>
+
+                  <button
+                    onClick={() => {
+                      setEditingRetailerProgramId(null);
+                      setView("retailer-program");
+                    }}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                  >
+                    + New Program
+                  </button>
+                </div>
+
+                <RetailerProgramList
+                  programs={retailerPrograms}
+                  onSelect={(id) => {
+                    setEditingRetailerProgramId(id);
                     setView("retailer-program");
                   }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                >
-                  + New Program
-                </button>
+                  onDelete={deleteRetailerProgram}
+                />
               </div>
+            )}
 
-              <RetailerProgramList
-                programs={retailerPrograms}
-                onSelect={(id) => {
-                  setEditingRetailerProgramId(id);
-                  setView("retailer-program");
-                }}
-                onDelete={deleteRetailerProgram}
-              />
-            </div>
-          )}
+            {/* Trading Partners */}
+            {menuTab === "trading-partners" && (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg text-slate-900">Trading Partners</h2>
 
-          {/* Trading Partners */}
-          {menuTab === "trading-partners" && (
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg text-slate-900">Trading Partners</h2>
+                  <button
+                    onClick={() => {
+                      setEditingTradingPartnerId(null);
 
-                <button
-                  onClick={() => {
-                    setEditingTradingPartnerId(null);
+                      // ✅ Reset form when creating new
+                      setFormData(defaultTradingPartnerData);
 
-                    // ✅ Reset form when creating new
-                    setFormData(defaultTradingPartnerData);
+                      setCurrentStep(0);
+                      setView("trading-partner");
+                    }}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                  >
+                    + New Trading Partner
+                  </button>
+                </div>
 
+                <TradingPartnerList
+                  partners={tradingPartners}
+                  onSelect={(id) => {
+                    const tp = tradingPartners.find((t) => t.id === id);
+                    if (!tp) return;
+
+                    setEditingTradingPartnerId(id);
+                    setFormData(tp.data);
                     setCurrentStep(0);
                     setView("trading-partner");
                   }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                >
-                  + New Trading Partner
-                </button>
+                  onDelete={deleteTradingPartner}
+                />
               </div>
-
-              <TradingPartnerList
-                partners={tradingPartners}
-                onSelect={(id) => {
-                  const tp = tradingPartners.find((t) => t.id === id);
-                  if (!tp) return;
-
-                  setEditingTradingPartnerId(id);
-                  setFormData(tp.data);
-                  setCurrentStep(0);
-                  setView("trading-partner");
-                }}
-                onDelete={deleteTradingPartner}
-              />
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     );
@@ -358,25 +364,23 @@ export default function App() {
     );
 
     return (
-      <RetailerProgramWizard
-        initialData={programToEdit ? programToEdit.data : undefined}
-        onComplete={handleRetailerProgramComplete}
-        onBack={() => {
-          setEditingRetailerProgramId(null);
-          setView("menu");
-        }}
-      />
-    );
+      <div className="h-screen flex">
+        <Sidebar />
 
-    return (
-      <RetailerProgramWizard
-        initialData={formData}
-        onComplete={handleRetailerProgramComplete}
-        onBack={() => {
-          setEditingRetailerProgramId(null);
-          setView("menu");
-        }}
-      />
+        {/* Main content (unchanged app content) */}
+        <div id="main-scroll" className="flex-1 overflow-auto bg-slate-50">
+          <div className="mx-auto max-w-7xl px-8 py-8">
+            <RetailerProgramWizard
+              initialData={programToEdit ? programToEdit.data : undefined}
+              onComplete={handleRetailerProgramComplete}
+              onBack={() => {
+                setEditingRetailerProgramId(null);
+                setView("menu");
+              }}
+            />
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -384,105 +388,113 @@ export default function App() {
    * TRADING PARTNER WIZARD
    * ------------------------------ */
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="mx-auto max-w-5xl px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <button
-            onClick={() => {
-              setEditingTradingPartnerId(null);
-              setFormData(defaultTradingPartnerData);
-              setCurrentStep(0);
-              setView("menu");
-            }}
-            className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 mb-4"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Back to Menu
-          </button>
+    <div className="h-screen flex">
+      <Sidebar />
 
-          <h1 className="text-2xl text-slate-900 mb-2">
-            {editingTradingPartnerId
-              ? "Edit Trading Partner"
-              : "Create Trading Partner"}
-          </h1>
+      {/* Main content (unchanged app content) */}
+      <div id="main-scroll" className="flex-1 overflow-auto bg-slate-50">
+        <div className="mx-auto max-w-5xl px-8 py-8">
+          {/* Header */}
+          <div className="mb-8">
+            <button
+              onClick={() => {
+                setEditingTradingPartnerId(null);
+                setFormData(defaultTradingPartnerData);
+                setCurrentStep(0);
+                setView("menu");
+              }}
+              className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 mb-4"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Back to Menu
+            </button>
 
-          <p className="text-sm text-slate-600">
-            Configure merchant-retailer shipping defaults, billing, and
-            overrides.
-          </p>
-        </div>
+            <h1 className="text-2xl text-slate-900 mb-2">
+              {editingTradingPartnerId
+                ? "Edit Trading Partner"
+                : "Create Trading Partner"}
+            </h1>
 
-        {/* Stepper */}
-        <div className="mb-10">
-          <WizardStepper
-            steps={STEPS}
-            currentStep={currentStep}
-            onStepClick={editingTradingPartnerId ? setCurrentStep : undefined}
-          />
-        </div>
+            <p className="text-sm text-slate-600">
+              Configure merchant-retailer shipping defaults, billing, and
+              overrides.
+            </p>
+          </div>
 
-        {/* Step Content */}
-        <div className="mb-8">
-          {currentStep === 0 && (
-            <IdentityStep
-              formData={formData}
-              updateFormData={updateFormData}
-              retailerPrograms={retailerPrograms} // ✅ pass programs into step
+          {/* Stepper */}
+          <div className="mb-10">
+            <WizardStepper
+              steps={STEPS}
+              currentStep={currentStep}
+              onStepClick={editingTradingPartnerId ? setCurrentStep : undefined}
             />
-          )}
+          </div>
 
-          {currentStep === 1 && (
-            <DefaultShippingStep
-              formData={formData}
-              updateFormData={updateFormData}
-            />
-          )}
-
-          {currentStep === 2 && (
-            <BillingStep formData={formData} updateFormData={updateFormData} />
-          )}
-
-          {currentStep === 3 && (
-            <ReviewStep
-              formData={formData}
-              updateFormData={updateFormData}
-              onActivate={handleActivate}
-            />
-          )}
-        </div>
-
-        {/* Footer Actions */}
-        <div className="mt-8 bg-white border-t border-slate-200 px-8 py-4 flex items-center justify-between rounded-lg">
-          {/* Back Button */}
-          <button
-            onClick={handleBackStep}
-            disabled={currentStep === 0}
-            className="px-4 py-2 text-sm border border-slate-300 bg-white text-slate-700 rounded hover:bg-slate-50 disabled:opacity-50"
-          >
-            Back
-          </button>
-
-          {/* Right Side Buttons */}
-          <div className="flex gap-3">
-            {/* ✅ Edit Mode Save Anytime */}
-            {editingTradingPartnerId && (
-              <button
-                onClick={() => setShowSaveConfirm(true)}
-                className="px-4 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700"
-              >
-                Save Changes…
-              </button>
+          {/* Step Content */}
+          <div className="mb-8">
+            {currentStep === 0 && (
+              <IdentityStep
+                formData={formData}
+                updateFormData={updateFormData}
+                retailerPrograms={retailerPrograms} // ✅ pass programs into step
+              />
             )}
 
-            {/* Continue Button */}
+            {currentStep === 1 && (
+              <DefaultShippingStep
+                formData={formData}
+                updateFormData={updateFormData}
+              />
+            )}
+
+            {currentStep === 2 && (
+              <BillingStep
+                formData={formData}
+                updateFormData={updateFormData}
+              />
+            )}
+
+            {currentStep === 3 && (
+              <ReviewStep
+                formData={formData}
+                updateFormData={updateFormData}
+                onActivate={handleActivate}
+              />
+            )}
+          </div>
+
+          {/* Footer Actions */}
+          <div className="mt-8 bg-white border-t border-slate-200 px-8 py-4 flex items-center justify-between rounded-lg">
+            {/* Back Button */}
             <button
-              onClick={handleNext}
-              disabled={currentStep === STEPS.length - 1}
-              className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              onClick={handleBackStep}
+              disabled={currentStep === 0}
+              className="px-4 py-2 text-sm border border-slate-300 bg-white text-slate-700 rounded hover:bg-slate-50 disabled:opacity-50"
             >
-              Continue
+              Back
             </button>
+
+            {/* Right Side Buttons */}
+            <div className="flex gap-3">
+              {/* ✅ Edit Mode Save Anytime */}
+              {editingTradingPartnerId && (
+                <button
+                  onClick={() => setShowSaveConfirm(true)}
+                  className="px-4 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700"
+                >
+                  Save Changes…
+                </button>
+              )}
+
+              {/* Continue Button */}
+              <button
+                onClick={handleNext}
+                disabled={currentStep === STEPS.length - 1}
+                className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              >
+                Continue
+              </button>
+            </div>
           </div>
         </div>
       </div>

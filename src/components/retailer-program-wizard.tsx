@@ -72,9 +72,14 @@ export function RetailerProgramWizard({
   /** Step State */
   const [currentStep, setCurrentStep] = useState(0);
 
-  /** ✅ Scroll to top whenever step changes */
+  /** ✅ Scroll to top whenever step changes (handle inner scroll container) */
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const container = document.getElementById("main-scroll");
+    if (container) {
+      container.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }, [currentStep]);
 
   /** Form State */
@@ -99,6 +104,9 @@ export function RetailerProgramWizard({
     setFormData((prev: any) => ({ ...prev, ...data }));
   };
 
+  /** In-app Save Confirm Modal (Edit Mode) */
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
+
   /** Validation Rules */
   const isStepValid = () => {
     if (currentStep === 0) {
@@ -116,7 +124,7 @@ export function RetailerProgramWizard({
   const handleNext = () => {
     if (!isStepValid()) {
       alert(
-        "Retailer Name, Program Name, and Program Code are required before continuing."
+        "Retailer Name, Program Name, and Program Code are required before continuing.",
       );
       return;
     }
@@ -166,8 +174,11 @@ export function RetailerProgramWizard({
   };
 
   /** Continue Disabled */
-  const disableContinue =
-    currentStep === STEPS.length - 1 ? false : !isStepValid();
+  const disableContinue = isEditMode
+    ? currentStep === STEPS.length - 1 || !isStepValid()
+    : currentStep === STEPS.length - 1
+      ? false
+      : !isStepValid();
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -214,40 +225,73 @@ export function RetailerProgramWizard({
             Back
           </button>
 
-          {/* Right Button */}
-          <button
-            onClick={() => {
-              /** Edit Mode: Save Anytime */
-              if (isEditMode) {
-                const confirmed = window.confirm(
-                  "Saving changes will update packing and compliance rules for all current open orders (not yet picked) and all future orders.\n\nStill want to continue?"
-                );
+          {/* Right Actions */}
+          {isEditMode ? (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleNext}
+                disabled={disableContinue}
+                className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              >
+                Continue
+              </button>
+              <button
+                onClick={() => setShowSaveConfirm(true)}
+                className="px-4 py-2 text-sm border border-slate-300 bg-white text-slate-700 rounded hover:bg-slate-50"
+              >
+                Save Changes
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => {
+                /** Create Mode: Final Save Happens on Review */
+                if (currentStep === STEPS.length - 1) {
+                  onComplete(formData);
+                  return;
+                }
 
-                if (!confirmed) return;
-
-                onComplete(formData);
-                return;
-              }
-
-              /** Create Mode: Final Save Happens on Review */
-              if (currentStep === STEPS.length - 1) {
-                onComplete(formData);
-                return;
-              }
-
-              handleNext();
-            }}
-            disabled={disableContinue}
-            className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-          >
-            {isEditMode
-              ? "Save Changes"
-              : currentStep === STEPS.length - 1
-              ? "Save Program"
-              : "Continue"}
-          </button>
+                handleNext();
+              }}
+              disabled={disableContinue}
+              className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+            >
+              {currentStep === STEPS.length - 1 ? "Save Program" : "Continue"}
+            </button>
+          )}
         </div>
       </div>
+      {showSaveConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+            <h3 className="text-lg font-medium text-slate-900 mb-2">
+              Save Program Changes?
+            </h3>
+            <p className="text-sm text-slate-600 mb-6">
+              Saving changes will update packing and compliance rules for all
+              current open orders (not yet picked) and all future orders under
+              this Retailer Program.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowSaveConfirm(false)}
+                className="px-4 py-2 text-sm border rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowSaveConfirm(false);
+                  onComplete(formData);
+                }}
+                className="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
